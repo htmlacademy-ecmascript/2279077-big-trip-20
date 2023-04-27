@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Диана Аразклычева](https://up.htmlacademy.ru/ecmascript/20/user/2279077).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Хабиров](https://htmlacademy.ru/profile/alex_khab).
 
 ---
 
