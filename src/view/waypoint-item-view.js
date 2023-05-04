@@ -42,7 +42,7 @@ function createWaypointItemTemplate() {
   );
 }
 
-export default class WaypointItemView {
+export default class PointItemView {
   getTemplate() {
     return createWaypointItemTemplate();
   }
