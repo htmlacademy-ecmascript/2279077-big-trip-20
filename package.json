@@ -28,11 +28,11 @@
     "flatpickr": "4.6.13",
     "he": "1.2.0"
   },
-"browserslist": [
-  "last 2 versions",
-  "not dead",
-  "not ie <= 11",
-  "not op_mini all",
-  "not < 0.25%"
-]
+  "browserslist": [
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+    "not < 0.25%"
+  ]
 }
