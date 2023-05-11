@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { saveNewWaypoint, getRandomDestination } from '../mock/data-structure.js';
+import { generateNewWaypoint, getRandomDestination } from '../mock/data-structure.js';
 import dayjs from 'dayjs';
 import { countDuration, constructionDuration } from '../utils.js';
 import { Offers } from '../const.js';
@@ -26,20 +26,23 @@ function createWaypointItemTemplate(point) {
     return offersByType ? offersByType.offers : [];
   };
 
-  const mapOffersIdsToOffers = (ids, offers) => ids.map((offerId) => offers.find((offer) => offerId.toString() === offer.id.toString()));
+  const mapOffersIdsToOffers = (ids, offers) => ids.map((offerId) => offers.filter((offer) => offerId.toString() === offer.id.toString()));
 
   const typeOffers = getOffersByType(Offers, type.toLowerCase());
   const pointOffers = mapOffersIdsToOffers(point.offers, typeOffers);
 
-  const getTitleOffersByType = () =>
-    pointOffers.map((offer) => `
-      <li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </li>`
-    ).join('');
-
+  const offersMarkup = typeOffers.map((offer) => {
+    if (offer.id, pointOffers) {
+      return (`
+    <li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+    </li>`
+      );
+    }
+    return '';
+  }).join('');
 
   return (/*html*/
     `<li class="trip-events__item">
@@ -61,7 +64,7 @@ function createWaypointItemTemplate(point) {
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">${getTitleOffersByType()}</ul>
+        <ul class="event__selected-offers">${offersMarkup()}</ul>
         <button class="event__favorite-btn ${favorite}" type="button">
 
           <span class="visually-hidden">Add to favorite</span>
@@ -78,7 +81,7 @@ function createWaypointItemTemplate(point) {
 }
 
 export default class PointItemView {
-  constructor({ point = saveNewWaypoint() }) {
+  constructor({ point = generateNewWaypoint() }) {
     this.point = point;
   }
 

@@ -32,18 +32,17 @@ const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.
 //Функция для генерации дополнительных предложений
 
 const getRandomOffersByType = (offers, type) => {
-  const index = offers.map((offer) => offer.type).indexOf(type);
+  const offersByType = offers.find((offer) => offer.type === type);
   const offersIDs = [];
 
-  if (index !== -1) {
-    const offersByType = offers[index].offers;
-    if (offersByType) {
-      for (let i = 0; i < offersByType.length; i++) {
+  if (offersByType) {
+    for (let i = 0; i < offersByType.length; i++) {
+      if (Math.random() > 0.5) {
         offersIDs.push(offersByType[i].id.toString());
       }
-      return offersIDs;
     }
   }
+
   return offersIDs;
 };
 
@@ -82,22 +81,20 @@ const countDuration = (start, end) => {
   };
 };
 
-const constructionDuration = (interval) => {
-  const duration = [];
-  if (interval.days !== 0) {
-    duration[0] = String(interval.days).padStart(2, '0');
-    duration[0] += 'D';
-  }
-  if (interval.hours !== 0) {
-    duration[1] = String(interval.hours).padStart(2, '0');
-    duration[1] += 'H';
-  }
-  if (interval.minutes !== 0) {
-    duration[2] = String(interval.minutes).padStart(2, '0');
-    duration[2] += 'M';
-  }
+let constructionDuration = (start, end) => {
+  const diff = dayjs(start).diff(dayjs(end));
 
-  return duration.join('');
+  constructionDuration = '';
+
+  if (diff.days() >= 0) {
+    constructionDuration += `${diff.days()} D`;
+  }
+  if (diff.hours() >= 0) {
+    constructionDuration += `${diff.hours()} H`;
+  }
+  if (diff.minutes() >= 0) {
+    constructionDuration += `${diff.minutes()} M`;
+  }
 };
 
 export {

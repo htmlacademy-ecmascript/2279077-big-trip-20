@@ -10,7 +10,7 @@ import {
   PICTURES_DESCRIPTIONS,
   DESTINATIONS_CITIES,
   WAYPOINTS_TYPES,
-  Offers,
+  OFFERS,
   MIN_ID_NUMBER,
   MAX_ID_NUMBER,
   MIN_COUNT_PICTURES,
@@ -23,7 +23,7 @@ import {
 
 const idNumber = createRandomIdFromRangeGenerator(MIN_ID_NUMBER, MAX_ID_NUMBER);
 
-const getRandomDestination = () => ({
+const getRandomDestinations = () => ({
   id: idNumber() ? idNumber().toString() : '',
   description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
   name: getRandomArrayElement(DESTINATIONS_CITIES),
@@ -34,10 +34,10 @@ const getRandomDestination = () => ({
 });
 
 
-const saveNewWaypoint = () => {
+const generateNewWaypoint = () => {
   const type = getRandomArrayElement(WAYPOINTS_TYPES);
   const date = getRandomDate();
-  const { id } = getRandomDestination();
+  const { id } = getRandomDestinations();
 
   return {
     basePrice: getRandomNumber(MIN_BASE_PRICE, MAX_BASE_PRICE),
@@ -45,11 +45,11 @@ const saveNewWaypoint = () => {
     dateTo: date.end,
     destination: id,
     isFavorite: Math.random() > 0.5,
-    offers: getRandomOffersByType(Offers, type.toLowerCase()),
-    type: type
+    offers: getRandomOffersByType(OFFERS, type.toLowerCase()),
+    type
   };
 };
 
-const createMockPoints = (count) => Array.from({ length: count }, (_, index) => saveNewWaypoint(index));
+const createMockPoints = (count) => Array.from({ length: count }, generateNewWaypoint);
 
-export { getRandomDestination, createMockPoints, saveNewWaypoint };
+export { getRandomDestinations, createMockPoints, generateNewWaypoint };

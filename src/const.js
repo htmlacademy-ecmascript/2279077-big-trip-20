@@ -29,7 +29,7 @@ const PICTURES_DESCRIPTIONS = [
   'Nullam nunc ex.'
 ];
 
-const Offers = [
+const OFFERS = [
   {
     type: 'check-in',
     offers: [
@@ -145,7 +145,7 @@ export {
   WAYPOINTS_TYPES,
   DESTINATIONS_DESCRIPTIONS,
   PICTURES_DESCRIPTIONS,
-  Offers,
+  OFFERS,
   MIN_ID_NUMBER,
   MAX_ID_NUMBER,
   MIN_COUNT_PICTURES,

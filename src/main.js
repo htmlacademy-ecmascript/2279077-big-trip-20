@@ -13,7 +13,10 @@ const siteMainElement = document.querySelector('.page-main');
 const tripEventsContainer = siteMainElement.querySelector('.trip-events');
 
 const pointsModel = new PointsModel();
-const waypointListPresenter = new TripPresenter({waypointListContainer: tripEventsContainer, pointsModel});
+const waypointListPresenter = new TripPresenter({
+  waypointListContainer: tripEventsContainer,
+  pointsModel
+});
 
 render(new TripInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
 render(new ListFiltersView(), listFiltersContainer);

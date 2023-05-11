@@ -1,7 +1,7 @@
 import { render } from '../render.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import PointItemView from '../view/waypoint-item-view';
-import PointEditFormView from '../view/edition-waypoint-form-view.js';
+import PointItemView from '../view/waypoint-view.js';
+import PointEditFormView from '../view/edit-waypoint-view.js';
 import { getRandomArrayElement } from '../utils.js';
 
 export default class TripPresenter {

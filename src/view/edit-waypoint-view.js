@@ -1,60 +1,55 @@
-import { saveNewWaypoint, getRandomDestination } from '../mock/data-structure.js';
+import { generateNewWaypoint, getRandomDestinations } from '../mock/data-structure.js';
 import { createElement } from '../render.js';
-import { Offers, WAYPOINTS_TYPES } from '../const.js';
+import { OFFERS, WAYPOINTS_TYPES } from '../const.js';
 import dayjs from 'dayjs';
 
 function createEditWaypointElement(point) {
-  const { basePrice, dateFrom, dateTo, destination, type } = point;
+  const { basePrice, dateFrom, dateTo, destination: destinationId, type, offers } = point;
 
   const timeFrom = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeTo = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
-  const { description, name, pictures } = getRandomDestination();
+  const { description, name, pictures } = getRandomDestinations();
   const cityDestination = name;
-
-  const getPicturesByDestination = (photos) => {
-    const picturesArr = [];
-    for (let i = 0; i < photos.length; i++) {
-      const picItem = photos[i];
-      picturesArr.push(picItem);
-    }
-    return picturesArr;
-  };
-  const destinationPictures = getPicturesByDestination(pictures);
 
   const getOffersByType = (offers, offerType) => {
     const offersByType = offers.find((offer) => offer.type === offerType);
     return offersByType ? offersByType.offers : [];
   };
 
-  const typeOffers = getOffersByType(Offers, type.toLowerCase());
+  const typeOffers = getOffersByType(OFFERS, type.toLowerCase());
 
   const createOffersByType = () => {
-    let callOffers = '';
-    if (typeOffers.length) {
-      callOffers = '';
-      typeOffers.forEach((offer) =>{
-        const checked = Math.random() > 0.5 ? 'checked' : '';
-        if(offer.title && offer.price && offer.id) {
-          callOffers += `
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${checked}>
+    if (!typeOffers.length) {
+      return '';
+    }
+
+    return typeOffers.map((offer) => {
+      {
+        const checked = false;
+          return (
+          `<div class="event__offer-selector">
+            <input
+            class="event__offer-checkbox visually-hidden"
+            id="event-offer-${offer.id}"
+            type="checkbox"
+            name="event-offer-${offer.id}"
+            ${checked}
+            >
             <label class="event__offer-label" for="event-offer-${offer.id}">
               <span class="event__offer-title">${offer.title}</span>
               &plus;&euro;&nbsp;
               <span class="event__offer-price">${offer.price}</span>
             </label>
-          </div>`;
+          </div>`);
         }
-      });
-    }
     return callOffers;
-  };
+    });
 
   const createDestinationPictures = () => {
     let pics = '';
     if (destinationPictures.length) {
-      destinationPictures.forEach((photo) => {
+      destinationPictures.map((photo) => {
         if (photo.src && photo.description) {
           pics += `
         <img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
@@ -66,18 +61,16 @@ function createEditWaypointElement(point) {
 
   const createSelectionType = () => {
     let selectType = '';
-    if (WAYPOINTS_TYPES.length) {
-      WAYPOINTS_TYPES.forEach((typeEvent) => {
+      WAYPOINTS_TYPES.map((typeEvent) => {
         const checked = typeEvent === type ? 'checked' : '';
         if(typeEvent) {
           selectType += `
           <div class="event__type-item">
             <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}" ${checked}>
-            <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
+            <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-.id">${typeEvent}</label>
           </div>`;
         }
       });
-    }
     return selectType;
   };
 
@@ -152,16 +145,16 @@ function createEditWaypointElement(point) {
     </form>
   </li>`
   );
-}
+};
 
 export default class PointEditFormView {
-  constructor({ point = saveNewWaypoint() }) {
+  constructor({ point = generateNewWaypoint() }) {
     this.point = point;
-  }
+    }
 
   getTemplate() {
     return createEditWaypointElement(this.point);
-  }
+    }
 
   getElement() {
     if (!this.element) {
@@ -169,9 +162,10 @@ export default class PointEditFormView {
     }
 
     return this.element;
-  }
+    }
 
   removeElement() {
     this.element = null;
+    }
   }
 }
