@@ -23,8 +23,8 @@ import {
 
 const idNumber = createRandomIdFromRangeGenerator(MIN_ID_NUMBER, MAX_ID_NUMBER);
 
-const getRandomDestinations = () => ({
-  id: idNumber() ? idNumber().toString() : '',
+const getRandomDestination = () => ({
+  id: idNumber().toString(),
   description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
   name: getRandomArrayElement(DESTINATIONS_CITIES),
   pictures: Array.from({length: getRandomNumber(MIN_COUNT_PICTURES, MAX_COUNT_PICTURES)}, () => ({
@@ -37,13 +37,12 @@ const getRandomDestinations = () => ({
 const generateNewWaypoint = () => {
   const type = getRandomArrayElement(WAYPOINTS_TYPES);
   const date = getRandomDate();
-  const { id } = getRandomDestinations();
 
   return {
     basePrice: getRandomNumber(MIN_BASE_PRICE, MAX_BASE_PRICE),
     dateFrom: date.start,
     dateTo: date.end,
-    destination: id,
+    destination: 1,
     isFavorite: Math.random() > 0.5,
     offers: getRandomOffersByType(OFFERS, type.toLowerCase()),
     type
@@ -51,5 +50,6 @@ const generateNewWaypoint = () => {
 };
 
 const createMockPoints = (count) => Array.from({ length: count }, generateNewWaypoint);
+const getRandomDestinations = (count) => Array.from({ length: count }, getRandomDestination);
 
 export { getRandomDestinations, createMockPoints, generateNewWaypoint };

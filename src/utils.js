@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 // Функции для поиска случайного числа из диапазона
 
@@ -71,30 +74,22 @@ const getRandomDate = () => {
   };
 };
 
-const countDuration = (start, end) => {
-  const interval = new Date(end - start);
+const calculateDuration = (start, end) => {
+  const diff = dayjs.duration(dayjs(start).diff(dayjs(end)));
 
-  return {
-    days: interval.getUTCDate() - 1,
-    hours: interval.getUTCHours(),
-    minutes: interval.getUTCMinutes()
-  };
-};
-
-let constructionDuration = (start, end) => {
-  const diff = dayjs(start).diff(dayjs(end));
-
-  constructionDuration = '';
+  let result = '';
 
   if (diff.days() >= 0) {
-    constructionDuration += `${diff.days()} D`;
+    result += `${diff.days()} D`;
   }
   if (diff.hours() >= 0) {
-    constructionDuration += `${diff.hours()} H`;
+    result += `${diff.hours()} H`;
   }
   if (diff.minutes() >= 0) {
-    constructionDuration += `${diff.minutes()} M`;
+    result += `${diff.minutes()} M`;
   }
+
+  return result;
 };
 
 export {
@@ -103,6 +98,5 @@ export {
   getRandomDate,
   getRandomOffersByType,
   createRandomIdFromRangeGenerator,
-  countDuration,
-  constructionDuration
+  calculateDuration
 };

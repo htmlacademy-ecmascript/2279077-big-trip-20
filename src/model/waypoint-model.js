@@ -10,4 +10,12 @@ export default class PointsModel {
   getPoints() {
     return this.points;
   }
+
+  getDestinations() {
+    return this.destinations;
+  }
+
+  getOffers() {
+    return this.offers;
+  }
 }

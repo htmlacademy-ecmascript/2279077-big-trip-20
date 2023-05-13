@@ -1,13 +1,9 @@
 import { createElement } from '../render.js';
-import { generateNewWaypoint, getRandomDestination } from '../mock/data-structure.js';
 import dayjs from 'dayjs';
-import { countDuration, constructionDuration } from '../utils.js';
-import { Offers } from '../const.js';
+import { calculateDuration } from '../utils.js';
 
-function createWaypointItemTemplate(point) {
-  const { basePrice, dateFrom, dateTo, type, isFavorite } = point;
-  const { name, } = getRandomDestination();
-  const cityDestination = name;
+function createWaypointItemTemplate(point, allOffers, allDestination) {
+  const { basePrice, dateFrom, dateTo, type, isFavorite, destination } = point;
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 
   const startDay = dayjs(dateFrom).format('MMM D');
@@ -17,22 +13,17 @@ function createWaypointItemTemplate(point) {
   const endTime = dayjs(dateTo).format('HH:mm');
   const endTimeDateTime = dayjs(dateTo).format('YYYY-MM-DDTHH:mm');
 
-  const duration = countDuration(dateFrom, dateTo);
-  const eventDuration = constructionDuration(duration);
-
+  const eventDuration = calculateDuration(dateFrom, dateTo);
 
   const getOffersByType = (offers, offerType) => {
     const offersByType = offers.find((offer) => offer.type === offerType);
     return offersByType ? offersByType.offers : [];
   };
 
-  const mapOffersIdsToOffers = (ids, offers) => ids.map((offerId) => offers.filter((offer) => offerId.toString() === offer.id.toString()));
-
-  const typeOffers = getOffersByType(Offers, type.toLowerCase());
-  const pointOffers = mapOffersIdsToOffers(point.offers, typeOffers);
+  const typeOffers = getOffersByType(allOffers, type.toLowerCase());
 
   const offersMarkup = typeOffers.map((offer) => {
-    if (offer.id, pointOffers) {
+    if (point.offers.includes(offer.id)) {
       return (`
     <li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
@@ -51,7 +42,6 @@ function createWaypointItemTemplate(point) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${cityDestination}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${startTimeDateTime}">${startTime}>10:30</time>
@@ -64,7 +54,6 @@ function createWaypointItemTemplate(point) {
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">${offersMarkup()}</ul>
         <button class="event__favorite-btn ${favorite}" type="button">
 
           <span class="visually-hidden">Add to favorite</span>
@@ -81,12 +70,14 @@ function createWaypointItemTemplate(point) {
 }
 
 export default class PointItemView {
-  constructor({ point = generateNewWaypoint() }) {
+  constructor({ point, offers, destinations }) {
     this.point = point;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate() {
-    return createWaypointItemTemplate(this.point);
+    return createWaypointItemTemplate(this.point, this.offers, this.destinations);
   }
 
   getElement() {
