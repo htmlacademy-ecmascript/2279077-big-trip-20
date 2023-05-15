@@ -34,7 +34,22 @@ const OFFERS = [
     type: 'check-in',
     offers: [
       {
-        id: 1,
+        id: '1',
+        title: 'Add breakfast',
+        price: 50
+      },
+      {
+        id: '2',
+        title: 'Add breakfast',
+        price: 50
+      },
+      {
+        id: '3',
+        title: 'Add breakfast',
+        price: 50
+      },
+      {
+        id: '4',
         title: 'Add breakfast',
         price: 50
       }
@@ -44,12 +59,12 @@ const OFFERS = [
     type: 'sightseeing',
     offers: [
       {
-        id: 10,
+        id: '10',
         title: 'Book tickets',
         price: 40
       },
       {
-        id: 20,
+        id: '20',
         title: 'Lunch in city',
         price: 30
       }
@@ -59,17 +74,17 @@ const OFFERS = [
     type: 'restaurant',
     offers: [
       {
-        id: 100,
+        id: '100',
         title: 'Brunch',
         price: 20
       },
       {
-        id: 200,
+        id: '200',
         title: 'Takeaway lunch',
         price: 12
       },
       {
-        id: 321,
+        id: '321',
         title: 'Cooking master class',
         price: 30
       }
@@ -79,7 +94,7 @@ const OFFERS = [
     type: 'taxi',
     offers: [
       {
-        id: 2341,
+        id: '2341',
         title: 'Order Uber',
         price: 40
       }
@@ -89,12 +104,12 @@ const OFFERS = [
     type: 'bus',
     offers: [
       {
-        id: 1541,
+        id: '1541',
         title: 'airport-hotel route',
         price: 20
       },
       {
-        id: 442,
+        id: '442',
         title: 'City tour',
         price: 10
       }
@@ -112,12 +127,12 @@ const OFFERS = [
     type: 'drive',
     offers: [
       {
-        id: 71,
+        id: '71',
         title: 'Rent a car',
         price: 200
       },
       {
-        id: 82,
+        id: '82',
         title: 'Car rental with driver',
         price: 1000
       }
@@ -127,12 +142,12 @@ const OFFERS = [
     type: 'flight',
     offers: [
       {
-        id: 51,
+        id: '51',
         title: 'Add luggage',
         price: 50
       },
       {
-        id: 442,
+        id: '442',
         title: 'Switch to comfort',
         price: 80
       }

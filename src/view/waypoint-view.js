@@ -1,9 +1,31 @@
 import { createElement } from '../render.js';
 import dayjs from 'dayjs';
-import { calculateDuration } from '../utils.js';
+import { calculateDuration, getOffersByType } from '../utils.js';
+
+const createEventPhotosTemplate = (picturesList) => {
+  if (!picturesList.length) {
+    return '';
+  }
+
+  return (/*html*/`
+    <div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${picturesList.map((picture) => `<img class="event__photo" src="${picture.src}" alt="Event photo.">`).join('')}
+      </div>
+    </div>`);
+};
+
+const createEventsEditDestinationTemplate = (destinationItem) => (/*html*/`
+    <section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destinationItem.description}</p>
+      ${createEventPhotosTemplate(destinationItem.pictures)}
+    </section>`);
+
 
 function createWaypointItemTemplate(point, allOffers, allDestination) {
   const { basePrice, dateFrom, dateTo, type, isFavorite, destination } = point;
+  const destinationItem = allDestination.find((item) => item.id === destination);
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 
   const startDay = dayjs(dateFrom).format('MMM D');
@@ -15,45 +37,45 @@ function createWaypointItemTemplate(point, allOffers, allDestination) {
 
   const eventDuration = calculateDuration(dateFrom, dateTo);
 
-  const getOffersByType = (offers, offerType) => {
-    const offersByType = offers.find((offer) => offer.type === offerType);
-    return offersByType ? offersByType.offers : [];
-  };
-
   const typeOffers = getOffersByType(allOffers, type.toLowerCase());
 
   const offersMarkup = typeOffers.map((offer) => {
     if (point.offers.includes(offer.id)) {
-      return (`
-    <li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </li>`
-      );
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </li>
+        `);
     }
     return '';
   }).join('');
 
   return (/*html*/
     `<li class="trip-events__item">
-      <div class="event">
-      <time class="event__date" datetime="${startDayDateTime}">${startDay}</time>
-        <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
-        </div>
-        <div class="event__schedule">
-          <p class="event__time">
-            <time class="event__start-time" datetime="${startTimeDateTime}">${startTime}>10:30</time>
-            &mdash;
-            <time class="event__end-time" datetime="${endTimeDateTime}">${endTime}</time>
-          </p>
-          <p class="event__duration">${eventDuration}</p>
-        </div>
-        <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
-        </p>
-        <h4 class="visually-hidden">Offers:</h4>
+        <form class="event event--edit" action="#" method="post">
+          <header class="event__header">
+            <div class="event">
+              <time class="event__date" datetime="${startDayDateTime}">${startDay}</time>
+            <div class="event__type">
+              <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+            </div>
+            <div class="event__schedule">
+              <p class="event__time">
+              <time class="event__start-time" datetime="${startTimeDateTime}">${startTime}</time>
+              &mdash;
+              <time class="event__end-time" datetime="${endTimeDateTime}">${endTime}</time>
+              </p>
+              <p class="event__duration">${eventDuration}</p>
+            </div>
+              <p class="event__price">
+              &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+              </p>
+            <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            ${offersMarkup}
+          </ul>
         <button class="event__favorite-btn ${favorite}" type="button">
 
           <span class="visually-hidden">Add to favorite</span>
@@ -64,6 +86,11 @@ function createWaypointItemTemplate(point, allOffers, allDestination) {
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
+        </header>
+        <section class="event__details">
+          ${createEventsEditDestinationTemplate(destinationItem)}
+        </section>
+      </form>
       </div>
     </li>`
   );

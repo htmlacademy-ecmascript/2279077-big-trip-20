@@ -31,24 +31,29 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 const getRandomNumber = (min, max) => getRandomInteger(min, max);
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 
+// Функция для генерации предложений
+
+const getOffersByType = (offers, offerType) => {
+  const offersByType = offers.find((offer) => offer.type === offerType);
+  return offersByType ? offersByType.offers : [];
+};
 
 //Функция для генерации дополнительных предложений
 
 const getRandomOffersByType = (offers, type) => {
-  const offersByType = offers.find((offer) => offer.type === type);
+  const offersByType = getOffersByType(offers, type);
   const offersIDs = [];
 
-  if (offersByType) {
-    for (let i = 0; i < offersByType.length; i++) {
+  if (offersByType.length > 0) {
+    offersByType.forEach((offer) => {
       if (Math.random() > 0.5) {
-        offersIDs.push(offersByType[i].id.toString());
+        offersIDs.push(offer.id);
       }
-    }
+    });
   }
 
   return offersIDs;
 };
-
 
 //Функция для генерации случайных дат
 
@@ -98,5 +103,6 @@ export {
   getRandomDate,
   getRandomOffersByType,
   createRandomIdFromRangeGenerator,
-  calculateDuration
+  calculateDuration,
+  getOffersByType
 };
