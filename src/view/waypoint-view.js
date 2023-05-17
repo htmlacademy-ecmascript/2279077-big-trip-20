@@ -2,30 +2,10 @@ import { createElement } from '../render.js';
 import dayjs from 'dayjs';
 import { calculateDuration, getOffersByType } from '../utils.js';
 
-const createEventPhotosTemplate = (picturesList) => {
-  if (!picturesList.length) {
-    return '';
-  }
-
-  return (/*html*/`
-    <div class="event__photos-container">
-      <div class="event__photos-tape">
-        ${picturesList.map((picture) => `<img class="event__photo" src="${picture.src}" alt="Event photo.">`).join('')}
-      </div>
-    </div>`);
-};
-
-const createEventsEditDestinationTemplate = (destinationItem) => (/*html*/`
-    <section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destinationItem.description}</p>
-      ${createEventPhotosTemplate(destinationItem.pictures)}
-    </section>`);
-
 
 function createWaypointItemTemplate(point, allOffers, allDestination) {
-  const { basePrice, dateFrom, dateTo, type, isFavorite, destination } = point;
-  const destinationItem = allDestination.find((item) => item.id === destination);
+  const { basePrice, dateFrom, dateTo, type, isFavorite, destination: destinationId } = point;
+  const destinationItem = allDestination.find((destination) => destination.id === destinationId);
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 
   const startDay = dayjs(dateFrom).format('MMM D');
@@ -54,13 +34,12 @@ function createWaypointItemTemplate(point, allOffers, allDestination) {
 
   return (/*html*/
     `<li class="trip-events__item">
-        <form class="event event--edit" action="#" method="post">
-          <header class="event__header">
             <div class="event">
               <time class="event__date" datetime="${startDayDateTime}">${startDay}</time>
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
             </div>
+            <h3 class="event__title">${type} ${destinationItem.name}</h3>
             <div class="event__schedule">
               <p class="event__time">
               <time class="event__start-time" datetime="${startTimeDateTime}">${startTime}</time>
@@ -88,7 +67,7 @@ function createWaypointItemTemplate(point, allOffers, allDestination) {
         </button>
         </header>
         <section class="event__details">
-          ${createEventsEditDestinationTemplate(destinationItem)}
+
         </section>
       </form>
       </div>

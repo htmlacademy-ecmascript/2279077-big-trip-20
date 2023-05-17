@@ -12,22 +12,6 @@ const getRandomInteger = (min, max) => {
   return Math.floor(result);
 };
 
-const createRandomIdFromRangeGenerator = (min, max) => {
-  const previousValues = [];
-
-  return function () {
-    let currentValue = getRandomInteger(min, max);
-    if (previousValues.length >= (max - min + 1)) {
-      return null;
-    }
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInteger(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
-  };
-};
-
 const getRandomNumber = (min, max) => getRandomInteger(min, max);
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 
@@ -102,7 +86,6 @@ export {
   getRandomNumber,
   getRandomDate,
   getRandomOffersByType,
-  createRandomIdFromRangeGenerator,
   calculateDuration,
   getOffersByType
 };

@@ -1,22 +1,48 @@
-import { generateNewWaypoint, getRandomDestinations } from '../mock/data-structure.js';
+import { generateNewWaypoint} from '../mock/data-structure.js';
 import { createElement } from '../render.js';
 import { WAYPOINTS_TYPES } from '../const.js';
 import dayjs from 'dayjs';
 
-const createOffersMarkup = (typeOffers) => {
-  if (!typeOffers.length) {
-    return '';a
+// Разметка точки назначения
+
+const createEventPhotosTemplate = (picturesList) => {
+  if (!picturesList.length) {
+    return '';
   }
 
+  return (/*html*/`
+    <div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${picturesList.map((picture) => `<img class="event__photo" src="${picture.src}" alt="Event photo.">`).join('')}
+      </div>
+    </div>`);
+};
+
+const createEventsEditDestinationTemplate = (destinationItem) => (/*html*/`
+    <section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destinationItem.description}</p>
+      ${createEventPhotosTemplate(destinationItem.pictures)}
+    </section>`);
+
+
+// Разметка предложения
+
+const createOffersMarkup = (typeOffers) => {
+  if (!typeOffers.length) {
+    return '';
+  }
   return typeOffers.map((offer) => {
-    const checked = false;
-    return (
-      `<div class="event__offer-selector">
+    const checked = typeOffers === offer ? 'checked' : '';
+    if(typeOffers) {
+
+      return (/*html*/
+        `<div class="event__offer-selector">
         <input
         class="event__offer-checkbox visually-hidden"
         id="event-offer-${offer.id}"
         type="checkbox"
-        name="event-offer-${offer.id}"
+        name="event-offer-${createOffersMarkup(offer.id)}"
         ${checked}
         >
         <label class="event__offer-label" for="event-offer-${offer.id}">
@@ -25,24 +51,27 @@ const createOffersMarkup = (typeOffers) => {
           <span class="event__offer-price">${offer.price}</span>
         </label>
         </div>`);
-  });
-};
-
-const createDestinationPictures = () => {
-  destinationPictures.map((photo) => {
-    if (photo.src && photo.description) {
-      pics += `
-    <img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
     }
   });
 };
+
+
+// Разметка пункта назначения
+
+const createDestinationListTemplate = ({ allDestination }) => (/*html*/`
+  <datalist id="destination-list-1">
+    ${allDestination.map((destination) => `<option value="${destination.name}"></option>`).join('')}
+  </datalist>`);
+
+
+// Разметка типа события
 
 const createSelectionType = () => {
   let selectType = '';
   WAYPOINTS_TYPES.map((typeEvent) => {
     const checked = typeEvent === type ? 'checked' : '';
     if(typeEvent) {
-      selectType += `
+      selectType += /*html*/`
       <div class="event__type-item">
         <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}" ${checked}>
         <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-.id">${typeEvent}</label>
@@ -52,21 +81,21 @@ const createSelectionType = () => {
   return selectType;
 };
 
-const createEditWaypointElement = (point, offers) => {
-  const { basePrice, dateFrom, dateTo, destination: destinationId, type: eventType, offers } = point;
+// Изменение точки маршрута
+
+const createEditWaypointElement = (point, allOffers, allDestination) => {
+  const { basePrice, dateFrom, dateTo, destination: destinationId, type, offers } = point;
+  const destinationItem = allDestination.find((item) => item.id === destinationId);
 
   const timeFrom = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const timeTo = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
-  const { description, name, pictures } = getRandomDestinations();
-  const cityDestination = name;
-
-  const getOffersByType = (offers, offerType) => {
+  const getOffersByType = (allOffer, offerType) => {
     const offersByType = offers.find((offer) => offer.type === offerType);
     return offersByType ? offersByType.offers : [];
   };
 
-  const typeOffers = getOffersByType(OFFERS, type.toLowerCase());
+  const typeOffers = getOffersByType(allOffers, type.toLowerCase());
   const offersMarkup = createOffersMarkup(typeOffers);
 
   return (/*html*/
@@ -79,6 +108,7 @@ const createEditWaypointElement = (point, offers) => {
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type} icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            ${createSelectionType({type})}
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
@@ -90,11 +120,9 @@ const createEditWaypointElement = (point, offers) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${cityDestination}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationItem.name}" list="destination-list-1">
             <datalist id="destination-list-1">
-              <option value="${destination}"></option>
-              <option value="${destination}"></option>
-              <option value="${destination}"></option>
+              ${createDestinationListTemplate({allDestination})}
             </datalist>
           </div>
           <div class="event__field-group  event__field-group--time">
@@ -117,6 +145,7 @@ const createEditWaypointElement = (point, offers) => {
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
         <section class="event__details">
+            ${createEventsEditDestinationTemplate(destinationItem)}
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -128,11 +157,11 @@ const createEditWaypointElement = (point, offers) => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${cityDestination} ${description}</p>
+          <p class="event__destination-description">${destinationItem} ${allDestination}</p>
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
-              ${createDestinationPictures()}
+              ${createEventPhotosTemplate()}
             </div>
           </div>
         </section>
@@ -143,8 +172,8 @@ const createEditWaypointElement = (point, offers) => {
 };
 
 export default class PointEditFormView {
-  constructor({ point = generateNewWaypoint(), offers, destinations }) {
-    this.point = point;
+  constructor({ point = generateNewWaypoint(), allOffers, allDestination }) {
+    this.point = {point, allOffers, allDestination};
   }
 
   getTemplate() {
