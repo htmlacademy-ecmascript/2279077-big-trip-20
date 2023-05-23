@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 import { calculateDuration, getOffersByType } from '../utils.js';
 
@@ -75,26 +75,30 @@ function createWaypointItemTemplate(point, allOffers, allDestination) {
   );
 }
 
-export default class PointItemView {
-  constructor({ point, offers, destinations }) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class PointItemView extends AbstractView{
+  #point = {};
+  #offers = {};
+  #destinations = {};
+  #buttonClick = null;
+
+  constructor({ point, offers, destinations, onRollupButtonClick }) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+
+    this.#buttonClick = onRollupButtonClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', onRollupButtonClick);
   }
 
-  getTemplate() {
-    return createWaypointItemTemplate(this.point, this.offers, this.destinations);
+  get template() {
+    return createWaypointItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  onRollupButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#buttonClick();
+  };
 }
+

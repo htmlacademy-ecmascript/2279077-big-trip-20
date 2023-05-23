@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createWaypointItemTemplate() {
   return (
@@ -6,20 +6,8 @@ function createWaypointItemTemplate() {
   );
 }
 
-export default class WaypointListView {
-  getTemplate() {
+export default class WaypointListView extends AbstractView{
+  get template() {
     return createWaypointItemTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

@@ -3,19 +3,19 @@ import { OFFERS, POINTS_COUNT } from '../const';
 
 
 export default class PointsModel {
-  points = createMockPoints(POINTS_COUNT);
-  offers = OFFERS;
-  destinations = getRandomDestinations(6);
+  #points = createMockPoints(POINTS_COUNT);
+  #offers = OFFERS;
+  #destinations = getRandomDestinations(6);
 
-  getPoints() {
-    return this.points;
+  get points() {
+    return this.#points;
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 }
