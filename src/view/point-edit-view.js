@@ -1,5 +1,5 @@
 import { generateNewWaypoint} from '../mock/data-structure.js';
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { WAYPOINTS_TYPES } from '../const.js';
 import dayjs from 'dayjs';
 import { getOffersByType } from '../utils.js';
@@ -154,27 +154,30 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
   );
 };
 
-export default class PointEditView {
-  constructor({ point = generateNewWaypoint(), offers, destinations }) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class PointEditView extends AbstractView {
+  #point = {};
+  #offers = {};
+  #destinations = {};
+  #editFormSubmit = null;
+
+  constructor({ point = generateNewWaypoint(), offers, destinations, onEditFormSubmit }) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+
+    this.#editFormSubmit = onEditFormSubmit;
+
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
   }
 
-  getTemplate() {
-    return createPointEditTemplate(this.point, this.offers, this.destinations);
+  get template() {
+    return createPointEditTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#editFormSubmit();
+  };
 }
 
