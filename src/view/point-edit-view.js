@@ -168,14 +168,14 @@ export default class PointEditView extends AbstractView {
 
     this.#editFormSubmit = onEditFormSubmit;
 
-    this.element.querySelector('.event--edit').addEventListener('submit', onEditFormSubmit);
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createPointEditTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  onEditFormSubmit = (evt) => {
+  #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#editFormSubmit();
   };

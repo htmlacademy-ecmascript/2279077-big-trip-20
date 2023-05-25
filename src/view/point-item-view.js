@@ -89,14 +89,14 @@ export default class PointItemView extends AbstractView{
 
     this.#buttonClick = onRollupButtonClick;
 
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', onRollupButtonClick);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
     return createWaypointItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  onRollupButtonClick = (evt) => {
+  #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#buttonClick();
   };
