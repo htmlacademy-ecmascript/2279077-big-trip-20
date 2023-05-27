@@ -4,6 +4,7 @@ import ListSortView from './view/list-sort-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/waypoint-list-presenter.js';
 import PointsModel from './model/waypoint-model.js';
+import { generateFilter } from './mock/filter.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
 const listFiltersContainer = siteHeaderElement.querySelector('.trip-controls__filters');
@@ -18,8 +19,10 @@ const waypointListPresenter = new TripPresenter({
   pointsModel
 });
 
+const filters = generateFilter(pointsModel. points);
+
 render(new TripInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
-render(new ListFiltersView(), listFiltersContainer);
+render(new ListFiltersView({filters}), listFiltersContainer);
 render(new ListSortView(), tripEventsContainer);
 
 waypointListPresenter.init();
