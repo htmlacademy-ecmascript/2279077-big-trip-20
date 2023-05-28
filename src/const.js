@@ -155,6 +155,13 @@ const OFFERS = [
   }
 ];
 
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
+
 export {
   DESTINATIONS_CITIES,
   WAYPOINTS_TYPES,
@@ -170,4 +177,5 @@ export {
   MIN_BASE_PRICE,
   MAX_BASE_PRICE,
   POINTS_COUNT,
+  FilterType
 };

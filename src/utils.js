@@ -81,11 +81,23 @@ const calculateDuration = (start, end) => {
   return result;
 };
 
+const isDateFuture = (dateFrom) => dayjs().isBefore(dateFrom);
+
+const isDatePast = (dateTo) => dayjs().isAfter(dateTo);
+
+const isDatePresent = (dateFrom, dateTo) => dayjs().isAfter(dateFrom) && dayjs().isBefore(dateTo);
+
+const isSameMonth = (dateFrom, dateTo) => dayjs(dateTo).isSame(dateFrom, 'M');
+
 export {
   getRandomArrayElement,
   getRandomNumber,
   getRandomDate,
   getRandomOffersByType,
   calculateDuration,
-  getOffersByType
+  getOffersByType,
+  isDateFuture,
+  isDatePast,
+  isDatePresent,
+  isSameMonth
 };
