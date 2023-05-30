@@ -89,6 +89,10 @@ const isDatePresent = (dateFrom, dateTo) => dayjs().isAfter(dateFrom) && dayjs()
 
 const isSameMonth = (dateFrom, dateTo) => dayjs(dateTo).isSame(dateFrom, 'M');
 
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
 export {
   getRandomArrayElement,
   getRandomNumber,
@@ -99,5 +103,6 @@ export {
   isDateFuture,
   isDatePast,
   isDatePresent,
-  isSameMonth
+  isSameMonth,
+  updateItem
 };
