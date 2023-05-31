@@ -10,9 +10,9 @@ export default class PointPresenter {
   #pointComponent = null;
   #pointEditComponent = null;
 
-  #point = null;
-  #offers = null;
   #destinations = null;
+  #offers = null;
+  #point = null;
 
   constructor({ waypointListContainer, onPointChange }) {
     this.#waypointListContainer = waypointListContainer;
@@ -28,17 +28,19 @@ export default class PointPresenter {
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new PointItemView({
-      point: this.#point,
-      offers: this.#offers,
       destinations: this.#destinations,
+      offers: this.#offers,
+      point: this.#point,
+
       onRollupButtonClick: this.#buttonClick,
       onFavoriteButtonClick: this.#handleFavoriteClick
     });
 
     this.#pointEditComponent = new PointEditView({
-      point: this.#point,
-      offers: this.#offers,
       destinations: this.#destinations,
+      offers: this.#offers,
+      point: this.#point,
+
       onEditFormSubmit: this.#editFormSubmit,
     });
 

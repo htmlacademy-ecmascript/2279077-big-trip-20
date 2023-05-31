@@ -9,9 +9,9 @@ export default class TripPresenter {
 
   #waypointListComponent = new WaypointListView();
 
-  #listPoints = [];
-  #offers = [];
   #destinations = [];
+  #offers = [];
+  #listPoints = [];
 
   #pointPresenter = new Map();
 
@@ -21,13 +21,14 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#listPoints = [...this.#pointsModel.points];
-    this.#offers = this.#pointsModel.offers;
     this.#destinations = this.#pointsModel.destinations;
+    this.#offers = this.#pointsModel.offers;
+    this.#listPoints = [...this.#pointsModel.points];
+
     render(this.#waypointListComponent, this.#waypointListContainer);
 
     for (let i = 0; i < this.#listPoints.length; i++) {
-      this.#renderPoint(this.#listPoints[i], this.#offers, this.#destinations);
+      this.#renderPoint(this.#destinations, this.#offers, this.#listPoints[i]);
     }
   }
 
@@ -36,12 +37,12 @@ export default class TripPresenter {
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   };
 
-  #renderPoint(point, offers, destinations) {
+  #renderPoint(destinations, offers, point) {
     const pointPresenter = new PointPresenter({
       waypointListContainer: this.#waypointListComponent.element,
       onPointChange: this.#handlePointChange
     });
-    pointPresenter.init(point, offers, destinations);
+    pointPresenter.init(destinations,offers, point);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 }

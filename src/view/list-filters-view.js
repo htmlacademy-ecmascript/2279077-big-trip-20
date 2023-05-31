@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createTripFiltersTemplate([type, count], isSelected) {
+function createTripFiltersTemplate(type, count, isSelected) {
   return (/*html*/
     `<div class="trip-filters__filter">
       <input
@@ -22,7 +22,7 @@ function createTripFiltersTemplate([type, count], isSelected) {
 const createFilterFormTemplate = (filters) => (/*html*/`
   <form class="trip-filters" action="#" method="get">
       ${Object.entries(filters).map(([type, count], index) =>
-    createTripFiltersTemplate([type, count], index === 0)).join('')}
+    createTripFiltersTemplate(type, count, index === 0)).join('')}
     </form>`
 );
 

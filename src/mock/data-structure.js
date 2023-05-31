@@ -18,10 +18,8 @@ import {
   MAX_BASE_PRICE,
 } from '../const';
 
-import { nanoid } from 'nanoid';
-
-const getRandomDestination = () => ({
-  id: nanoid(),
+const getRandomDestination = (index) => ({
+  id: index,
   description: getRandomArrayElement(DESTINATIONS_DESCRIPTIONS),
   name: getRandomArrayElement(DESTINATIONS_CITIES),
   pictures: Array.from({length: getRandomNumber(MIN_COUNT_PICTURES, MAX_COUNT_PICTURES)}, () => ({
