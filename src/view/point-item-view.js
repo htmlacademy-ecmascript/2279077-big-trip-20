@@ -6,8 +6,6 @@ import { calculateDuration, getOffersByType } from '../utils.js';
 function createWaypointItemTemplate(allDestination, allOffers, point) {
   const { type, destination: destinationId, dateFrom, dateTo, basePrice, isFavorite } = point;
   const destinationItem = allDestination.find((destination) => destination.id === destinationId);
-  // eslint-disable-next-line no-console
-  console.log(allDestination);
 
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 

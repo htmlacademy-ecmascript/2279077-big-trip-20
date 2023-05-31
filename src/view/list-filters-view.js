@@ -14,16 +14,17 @@ function createTripFiltersTemplate(type, count, isSelected) {
       <label
         class="trip-filters__filter-label"
         for="filter-${type}">
-        ${type}</label>
+        ${type}
+      </label>
     </div>`
   );
 }
 
 const createFilterFormTemplate = (filters) => (/*html*/`
   <form class="trip-filters" action="#" method="get">
-      ${Object.entries(filters).map(([type, count], index) =>
+      ${filters.map(({type, count}, index) =>
     createTripFiltersTemplate(type, count, index === 0)).join('')}
-    </form>`
+  </form>`
 );
 
 export default class ListFiltersView extends AbstractView {
