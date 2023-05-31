@@ -19,7 +19,7 @@ const waypointListPresenter = new TripPresenter({
   pointsModel
 });
 
-const filters = generateFilter(pointsModel. points);
+const filters = generateFilter(pointsModel.points);
 
 render(new TripInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
 render(new ListFiltersView({filters}), listFiltersContainer);

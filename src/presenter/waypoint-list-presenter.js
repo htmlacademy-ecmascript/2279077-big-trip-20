@@ -1,18 +1,19 @@
-import { render, replace } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import PointItemView from '../view/point-item-view.js';
-import PointEditView from '../view/point-edit-view.js';
+import { updateItem } from '../utils.js';
+import PointPresenter from '../presenter/point-presenter.js';
 
 export default class TripPresenter {
   #waypointListContainer = null;
   #pointsModel = null;
 
   #waypointListComponent = new WaypointListView();
-  #pointEditComponent = null;
 
-  #listPoints = [];
-  #offers = [];
   #destinations = [];
+  #offers = [];
+  #listPoints = [];
+
+  #pointPresenter = new Map();
 
   constructor ({ waypointListContainer, pointsModel }) {
     this.#waypointListContainer = waypointListContainer;
@@ -20,53 +21,28 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#listPoints = [...this.#pointsModel.points];
-    this.#offers = this.#pointsModel.offers;
     this.#destinations = this.#pointsModel.destinations;
+    this.#offers = this.#pointsModel.offers;
+    this.#listPoints = [...this.#pointsModel.points];
+
     render(this.#waypointListComponent, this.#waypointListContainer);
 
     for (let i = 0; i < this.#listPoints.length; i++) {
-      this.#renderPoint(this.#listPoints[i], this.#offers, this.#destinations);
+      this.#renderPoint(this.#destinations, this.#offers, this.#listPoints[i]);
     }
   }
 
-  #renderPoint(point, offers, destinations) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
+  #handlePointChange = (updatedPoint) => {
+    this.#listPoints = updateItem(this.#listPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  };
 
-    const pointComponent = new PointItemView({
-      point,
-      offers,
-      destinations,
-      onRollupButtonClick: () => {
-        replacePointToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+  #renderPoint(destinations, offers, point) {
+    const pointPresenter = new PointPresenter({
+      waypointListContainer: this.#waypointListComponent.element,
+      onPointChange: this.#handlePointChange
     });
-
-    const pointEditComponent = new PointEditView({
-      point,
-      offers,
-      destinations,
-      onEditFormSubmit: () => {
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replacePointToForm() {
-      replace(pointEditComponent, pointComponent);
-    }
-
-    function replaceFormToPoint() {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    render(pointComponent, this.#waypointListComponent.element);
+    pointPresenter.init(destinations,offers, point);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 }

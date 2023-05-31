@@ -3,9 +3,10 @@ import dayjs from 'dayjs';
 import { calculateDuration, getOffersByType } from '../utils.js';
 
 
-function createWaypointItemTemplate(point, allOffers, allDestination) {
-  const { basePrice, dateFrom, dateTo, type, isFavorite, destination: destinationId } = point;
+function createWaypointItemTemplate(allDestination, allOffers, point) {
+  const { type, destination: destinationId, dateFrom, dateTo, basePrice, isFavorite } = point;
   const destinationItem = allDestination.find((destination) => destination.id === destinationId);
+
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 
   const startDay = dayjs(dateFrom).format('MMM D');
@@ -76,29 +77,38 @@ function createWaypointItemTemplate(point, allOffers, allDestination) {
 }
 
 export default class PointItemView extends AbstractView{
-  #point = {};
-  #offers = {};
   #destinations = {};
-  #buttonClick = null;
+  #offers = {};
+  #point = {};
 
-  constructor({ point, offers, destinations, onRollupButtonClick }) {
+
+  #buttonClick = null;
+  #handleFavoriteClick = null;
+
+  constructor({ destinations, offers, point, onRollupButtonClick, onFavoriteButtonClick }) {
     super();
-    this.#point = point;
-    this.#offers = offers;
     this.#destinations = destinations;
+    this.#offers = offers;
+    this.#point = point;
 
     this.#buttonClick = onRollupButtonClick;
+    this.#handleFavoriteClick = onFavoriteButtonClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
-    return createWaypointItemTemplate(this.#point, this.#offers, this.#destinations);
+    return createWaypointItemTemplate(this.#destinations, this.#offers, this.#point);
   }
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#buttonClick();
   };
-}
 
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
+  };
+}

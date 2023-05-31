@@ -90,8 +90,8 @@ const createTypesMarkup = (type) => WAYPOINTS_TYPES.map((typeEvent) => {
 
 // Изменение точки маршрута
 
-const createPointEditTemplate = (point, allOffers, allDestinations) => {
-  const { basePrice, dateFrom, dateTo, destination: destinationId, type, offers } = point;
+const createPointEditTemplate = (allDestinations, allOffers, point) => {
+  const { type, destination: destinationId, offers, basePrice, dateFrom, dateTo } = point;
   const destinationItem = allDestinations.find((item) => item.id === destinationId);
 
   const timeFrom = dayjs(dateFrom).format('DD/MM/YY HH:mm');
@@ -155,16 +155,17 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
 };
 
 export default class PointEditView extends AbstractView {
-  #point = {};
-  #offers = {};
   #destinations = {};
+  #offers = {};
+  #point = {};
+
   #editFormSubmit = null;
 
-  constructor({ point = generateNewWaypoint(), offers, destinations, onEditFormSubmit }) {
+  constructor({ destinations, offers, point = generateNewWaypoint(),onEditFormSubmit }) {
     super();
-    this.#point = point;
-    this.#offers = offers;
     this.#destinations = destinations;
+    this.#offers = offers;
+    this.#point = point;
 
     this.#editFormSubmit = onEditFormSubmit;
 
@@ -172,12 +173,12 @@ export default class PointEditView extends AbstractView {
   }
 
   get template() {
-    return createPointEditTemplate(this.#point, this.#offers, this.#destinations);
+    return createPointEditTemplate(this.#destinations, this.#offers, this.#point);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#editFormSubmit();
+    this.#editFormSubmit(this.#destinations, this.#offers, this.#point);
   };
 }
 
