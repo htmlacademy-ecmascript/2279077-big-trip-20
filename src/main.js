@@ -1,6 +1,5 @@
 import { render, RenderPosition } from './framework/render.js';
 import ListFiltersView from './view/list-filters-view.js';
-import ListSortView from './view/list-sort-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/waypoint-list-presenter.js';
 import PointsModel from './model/waypoint-model.js';
@@ -23,6 +22,5 @@ const filters = generateFilter(pointsModel.points);
 
 render(new TripInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
 render(new ListFiltersView({filters}), listFiltersContainer);
-render(new ListSortView(), tripEventsContainer);
 
 waypointListPresenter.init();
