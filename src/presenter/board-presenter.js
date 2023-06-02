@@ -1,9 +1,10 @@
 import { RenderPosition, render } from '../framework/render.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import { sortByDateFromAsc, sortByDesc, sortByDurationDesc, updateItem } from '../utils.js';
-import PointPresenter from '../presenter/point-presenter.js';
+import { updateItem } from '../utils.js';
+import PointPresenter from './point-presenter.js';
 import ListSortView from '../view/list-sort-view.js';
 import { SortType } from '../const.js';
+import { sortByTime, sortByPrice } from '../sort-util.js';
 
 export default class TripPresenter {
   #waypointListContainer = null;
@@ -42,19 +43,14 @@ export default class TripPresenter {
   }
 
   #sortPoints(sortType) {
-
     switch (sortType) {
-      case SortType.DAY:
-        this.#listPoints.sort(sortByDateFromAsc);
-        break;
       case SortType.TIME:
-        this.#listPoints.sort(sortByDurationDesc);
+        this.#listPoints = [...sortByTime(this.#listPoints)];
         break;
       case SortType.PRICE:
-        this.#listPoints.sort(sortByDesc('basePrice'));
+        this.#listPoints = [...sortByPrice(this.#listPoints)];
         break;
       default:
-
         this.#listPoints = [...this.#sourcedBoardPoints];
     }
 
@@ -77,6 +73,7 @@ export default class TripPresenter {
     this.#sortComponent = new ListSortView ({
       onSortTypeChange: this.#handleSortTypeChange
     });
+
     render(this.#sortComponent, this.#waypointListComponent.element, RenderPosition.AFTERBEGIN);
 
   }

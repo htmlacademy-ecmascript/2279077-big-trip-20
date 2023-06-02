@@ -1,7 +1,7 @@
 import { render, RenderPosition } from './framework/render.js';
 import ListFiltersView from './view/list-filters-view.js';
 import TripInfoView from './view/trip-info-view.js';
-import TripPresenter from './presenter/waypoint-list-presenter.js';
+import TripPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/waypoint-model.js';
 import { generateFilter } from './mock/filter.js';
 

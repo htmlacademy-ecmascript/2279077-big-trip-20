@@ -93,17 +93,6 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-const sortByDurationDesc = (pointA, pointB) => {
-  const pointADuration = calculateDuration(pointA.dateFrom, pointA.dateTo);
-  const pointBDuration = calculateDuration(pointB.dateFrom, pointB.dateTo);
-
-  return pointBDuration.asMilliseconds() - pointADuration.asMilliseconds();
-};
-
-const sortByDateFromAsc = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
-
-const sortByDesc = (propertyName) => (first, second) => second[propertyName] - first[propertyName];
-
 export {
   getRandomArrayElement,
   getRandomNumber,
@@ -116,7 +105,4 @@ export {
   isDatePresent,
   isSameMonth,
   updateItem,
-  sortByDateFromAsc,
-  sortByDurationDesc,
-  sortByDesc
 };
