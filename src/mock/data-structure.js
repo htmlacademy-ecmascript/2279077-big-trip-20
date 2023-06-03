@@ -29,11 +29,12 @@ const getRandomDestination = (index) => ({
 });
 
 
-const generateNewWaypoint = () => {
+const generateNewWaypoint = (index) => {
   const type = getRandomArrayElement(WAYPOINTS_TYPES);
   const date = getRandomDate();
 
   return {
+    id: index,
     basePrice: getRandomNumber(MIN_BASE_PRICE, MAX_BASE_PRICE),
     dateFrom: date.start,
     dateTo: date.end,
@@ -44,7 +45,7 @@ const generateNewWaypoint = () => {
   };
 };
 
-const createMockPoints = (count) => Array.from({ length: count }, generateNewWaypoint);
+const createMockPoints = (count) => Array.from({ length: count }, (_, index) => generateNewWaypoint(index + 1));
 const getRandomDestinations = (count) => Array.from({ length: count }, (_, index) => getRandomDestination(index + 1));
 
 export { getRandomDestinations, createMockPoints, generateNewWaypoint };

@@ -33,32 +33,28 @@ export default class TripPresenter {
 
     this.#sourcedBoardPoints = [...this.#pointsModel.points];
 
-    render(this.#waypointListComponent, this.#waypointListContainer);
-
-    for (let i = 0; i < this.#listPoints.length; i++) {
-      this.#renderPoint(this.#destinations, this.#offers, this.#listPoints[i]);
-    }
-
     this.#renderBoard();
   }
 
   #sortPoints(sortType) {
     switch (sortType) {
       case SortType.TIME:
-        this.#listPoints = [...sortByTime(this.#listPoints)];
+        this.#listPoints = sortByTime(this.#listPoints);
         break;
       case SortType.PRICE:
-        this.#listPoints = [...sortByPrice(this.#listPoints)];
+        this.#listPoints = sortByPrice(this.#listPoints);
+        break;
+      case SortType.DAY:
+        this.#listPoints = [...this.#sourcedBoardPoints];
         break;
       default:
-        this.#listPoints = [...this.#sourcedBoardPoints];
+        throw new Error(`Unknown sort type: ${sortType}`);
     }
 
     this.#currentSortType = sortType;
   }
 
   #handleSortTypeChange = (sortType) => {
-    // - сортировка
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -74,7 +70,7 @@ export default class TripPresenter {
       onSortTypeChange: this.#handleSortTypeChange
     });
 
-    render(this.#sortComponent, this.#waypointListComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#sortComponent, this.#waypointListContainer, RenderPosition.AFTERBEGIN);
 
   }
 
@@ -98,12 +94,17 @@ export default class TripPresenter {
     this.#pointPresenter.clear();
   }
 
+  #renderPoints() {
+    this.#listPoints.forEach((point) => this.#renderPoint(this.#destinations, this.#offers, point));
+  }
+
   #renderPointList() {
-    render(this.#waypointListComponent, this.#waypointListComponent.element);
+    render(this.#waypointListComponent, this.#waypointListContainer);
+
+    this.#renderPoints();
   }
 
   #renderBoard() {
-    render(this.#waypointListComponent, this.#waypointListContainer);
 
     this.#renderSort();
     this.#renderPointList();
