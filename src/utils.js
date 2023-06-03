@@ -104,5 +104,5 @@ export {
   isDatePast,
   isDatePresent,
   isSameMonth,
-  updateItem
+  updateItem,
 };

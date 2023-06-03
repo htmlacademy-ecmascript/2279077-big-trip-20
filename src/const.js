@@ -162,6 +162,14 @@ const FilterType = {
   PAST: 'past'
 };
 
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
+};
+
 export {
   DESTINATIONS_CITIES,
   WAYPOINTS_TYPES,
@@ -177,5 +185,6 @@ export {
   MIN_BASE_PRICE,
   MAX_BASE_PRICE,
   POINTS_COUNT,
-  FilterType
+  FilterType,
+  SortType
 };
