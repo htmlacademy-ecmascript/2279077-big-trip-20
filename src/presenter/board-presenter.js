@@ -77,7 +77,7 @@ export default class TripPresenter {
   #handlePointChange = (updatedPoint) => {
     this.#listPoints = updateItem(this.#listPoints, updatedPoint);
     this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(this.#destinations, this.#offers, updatedPoint);
   };
 
   #renderPoint(destinations, offers, point) {
@@ -85,7 +85,7 @@ export default class TripPresenter {
       waypointListContainer: this.#waypointListComponent.element,
       onPointChange: this.#handlePointChange
     });
-    pointPresenter.init(destinations,offers, point);
+    pointPresenter.init(destinations, offers, point);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
