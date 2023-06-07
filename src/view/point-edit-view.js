@@ -84,7 +84,7 @@ const createTypesMarkup = (type) => WAYPOINTS_TYPES.map((typeEvent) => {
   return (/*html*/`
       <div class="event__type-item">
         <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}" ${checked}>
-        <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-.id">${typeEvent}</label>
+        <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
       </div>`);
 }).join('');
 
@@ -142,7 +142,8 @@ const createPointEditTemplate = (allDestinations, allOffers, point) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__rollup-btn" type="button">
         </header>
         <section class="event__details">
           ${createOffersTemplate(typeOffers, offers)}
@@ -162,14 +163,14 @@ export default class PointEditView extends AbstractStatefulView {
   #editFormSubmit = null;
   #editFormCancel = null;
 
-  constructor({ destinations, offers, point = generateNewWaypoint(), onEditFormSubmit, onEditFormCansel }) {
+  constructor({ destinations, offers, point = generateNewWaypoint(), onEditFormSubmit, onEditFormCancel }) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;
     this._setState(PointEditView.parsePointToState(point));
 
     this.#editFormSubmit = onEditFormSubmit;
-    this.#editFormCancel = onEditFormCansel;
+    this.#editFormCancel = onEditFormCancel;
 
     this._restoreHandlers();
   }
@@ -178,7 +179,7 @@ export default class PointEditView extends AbstractStatefulView {
     return createPointEditTemplate(this.#destinations, this.#offers, this._state);
   }
 
-  resert (point) {
+  reset (point) {
     this.updateElement(
       PointEditView.parsePointToState(point),
     );
@@ -188,11 +189,11 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event--edit')
       .addEventListener('submit', this.#formSubmitHandler);
 
-    this.element.querySelector('.event__reset-btn')
+    this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#formCancelHandler);
 
-    // this.element.querySelector('.event__rollup-btn')
-    //   .addEventListener('click', this.#formCancelHandler);
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#formCancelHandler);
 
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
@@ -200,8 +201,12 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
 
-    // this.element.querySelector('.event__available-offers')
-    //   .addEventListener('change', this.#offerSelectHandler);
+    const offersElement = this.element.querySelector('.event__available-offers');
+
+    if (offersElement) {
+      offersElement.addEventListener('change', this.#offerSelectHandler);
+    }
+
   }
 
   #typeChangeHandler = (evt) => {
@@ -211,22 +216,28 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #destinationChangeHandler = (evt) => {
-    this.updateElement({
-      destination: this.#destinations.getByName(evt.target.value).id,
-    });
+    if (evt.target.value === '') {
+      return;
+    }
+
+    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+    if (selectedDestination) {
+      this.updateElement({
+        destination: selectedDestination.id,
+      });
+    }
   };
 
   #offerSelectHandler = (evt) => {
     const selectedOffer = evt.target.value;
-    if (evt.target.checked) {
-      this.updateElement({
-        offers: [...this._state.offers, selectedOffer],
-      });
-    } else {
-      this.updateElement({
-        offers: [...this._state.offers.filter((offer) => offer !== selectedOffer)],
-      });
-    }
+
+    const newOffers = evt.target.checked
+      ? this._state.offers.push(selectedOffer)
+      : this._state.offers.filter((offer) => offer !== selectedOffer);
+
+    this.updateElement({
+      offers: newOffers,
+    });
   };
 
   #formSubmitHandler = (evt) => {

@@ -42,7 +42,7 @@ export default class PointPresenter {
       point: this.#point,
 
       onEditFormSubmit: this.#editFormSubmit,
-      onEditFormCansel: this.#editFormCancel
+      onEditFormCancel: this.#editFormCancel
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -81,7 +81,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#pointEditComponent.resert(this.#point);
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -100,7 +100,7 @@ export default class PointPresenter {
   };
 
   #editFormCancel = () => {
-    this.#pointEditComponent.resert(this.#point);
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToPoint();
   };
 }
