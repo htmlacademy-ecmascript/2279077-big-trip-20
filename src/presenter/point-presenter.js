@@ -1,10 +1,11 @@
 import { remove, render, replace } from '../framework/render.js';
-
+import { UserAction, UpdateType } from '../const.js';
 import PointItemView from '../view/point-item-view.js';
 import PointEditView from '../view/point-edit-view.js';
+import { isDatesEqual } from '../sort-util.js';
 
 export default class PointPresenter {
-  #waypointListContainer = null;
+  #pointListContainer = null;
   #handlePointChange = null;
 
   #pointComponent = null;
@@ -14,8 +15,8 @@ export default class PointPresenter {
   #offers = null;
   #point = null;
 
-  constructor({ waypointListContainer, onPointChange }) {
-    this.#waypointListContainer = waypointListContainer;
+  constructor({ pointListContainer, onPointChange }) {
+    this.#pointListContainer = pointListContainer;
     this.#handlePointChange = onPointChange;
   }
 
@@ -42,20 +43,20 @@ export default class PointPresenter {
       point: this.#point,
 
       onEditFormSubmit: this.#editFormSubmit,
-      onEditFormCancel: this.#editFormCancel
+      onEditFormCancel: this.#editFormCancel,
+      onEditFormDelete: this.#editFormDelete
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      render(this.#pointComponent, this.#waypointListContainer);
+      render(this.#pointComponent, this.#pointListContainer);
       return;
     }
 
-    // Проверка на наличие в DOM
-    if (this.#waypointListContainer.contains(prevPointComponent.element)) {
+    if (this.#pointListContainer.contains(prevPointComponent.element)) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#waypointListContainer.contains(prevPointEditComponent.element)) {
+    if (this.#pointListContainer.contains(prevPointEditComponent.element)) {
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
@@ -91,12 +92,32 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handlePointChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
   };
 
-  #editFormSubmit = (point) => {
-    this.#handlePointChange(point);
+  #editFormSubmit = (update) => {
+    const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom);
+
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate
+        ? UpdateType.PATCH
+        : UpdateType.MINOR,
+      update,
+    );
     this.#replaceFormToPoint();
+  };
+
+  #editFormDelete = (point) => {
+    this.#handlePointChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 
   #editFormCancel = () => {

@@ -14,7 +14,7 @@ function createTripInfoTemplate() {
   );
 }
 
-export default class WaypointListView extends AbstractView{
+export default class PointInfoView extends AbstractView{
   get template() {
     return createTripInfoTemplate();
   }

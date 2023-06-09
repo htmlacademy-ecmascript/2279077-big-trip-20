@@ -6,7 +6,7 @@ function createWaypointItemTemplate() {
   );
 }
 
-export default class WaypointListView extends AbstractView{
+export default class PointListView extends AbstractView{
   get template() {
     return createWaypointItemTemplate();
   }

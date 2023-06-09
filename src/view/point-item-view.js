@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 import { calculateDuration, getOffersByType } from '../utils.js';
+import he from 'he';
 
 
 function createWaypointItemTemplate(allDestination, allOffers, point) {
@@ -39,7 +40,7 @@ function createWaypointItemTemplate(allDestination, allOffers, point) {
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
             </div>
-            <h3 class="event__title">${type} ${destinationItem.name}</h3>
+            <h3 class="event__title">${type} ${he.encode(`${destinationItem.name}`)}</h3>
             <div class="event__schedule">
               <p class="event__time">
               <time class="event__start-time" datetime="${startTimeDateTime}">${startTime}</time>
@@ -49,7 +50,7 @@ function createWaypointItemTemplate(allDestination, allOffers, point) {
               <p class="event__duration">${eventDuration}</p>
             </div>
               <p class="event__price">
-              &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+              &euro;&nbsp;<span class="event__price-value">${he.encode(`${basePrice}`)}</span>
               </p>
             <h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
