@@ -43,7 +43,6 @@ function handleNewPointButtonClick(){
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, tripInfoContainer);
 render(new PointInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
 
 filtersPresenter.init();

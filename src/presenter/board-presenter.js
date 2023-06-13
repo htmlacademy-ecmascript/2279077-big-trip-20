@@ -49,15 +49,16 @@ export default class BoardPresenter {
 
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return filteredPoints.sort(sortByDate);
+        return filteredPoints.slice().sort(sortByDate);
       case SortType.TIME:
-        return filteredPoints.sort(sortByTime);
+        return filteredPoints.slice().sort(sortByTime);
       case SortType.PRICE:
-        return filteredPoints.sort(sortByPrice);
+        return filteredPoints.slice().sort(sortByPrice);
+      default:
+        throw new Error(`Unknow sort type ${this.#currentSortType}`);
     }
-
-    return filteredPoints;
   }
+
 
   init() {
     this.#destinations = this.#pointsModel.destinations;
@@ -72,6 +73,11 @@ export default class BoardPresenter {
     this.#filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init();
   }
+
+  #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -111,7 +117,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.id).init(data);
+        this.#pointPresenter.get(data.id).init(this.#destinations, this.#offers, data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
@@ -127,7 +133,8 @@ export default class BoardPresenter {
   #renderPoint(destinations, offers, point) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#pointListComponent.element,
-      onPointChange: this.#handleViewAction
+      onPointChange: this.#handleViewAction,
+      onModeChange: this.#handleModeChange,
     });
     pointPresenter.init(destinations, offers, point);
     this.#pointPresenter.set(point.id, pointPresenter);
@@ -147,6 +154,7 @@ export default class BoardPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+
     if(this.#noPointsComponent){
       remove(this.#noPointsComponent);
     }
@@ -156,11 +164,13 @@ export default class BoardPresenter {
     }
   }
 
+
   #renderBoard() {
     render(this.#pointListComponent, this.#pointListContainer);
 
     const points = this.points;
     const pointsCount = points.length;
+
     if (pointsCount === 0){
       this.#renderNoPoints();
       return;

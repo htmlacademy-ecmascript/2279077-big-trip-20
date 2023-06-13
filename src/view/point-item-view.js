@@ -4,7 +4,7 @@ import { calculateDuration, getOffersByType } from '../utils.js';
 import he from 'he';
 
 
-function createWaypointItemTemplate(allDestination, allOffers, point) {
+function createPointItemTemplate(allDestination, allOffers, point) {
   const { type, destination: destinationId, dateFrom, dateTo, basePrice, isFavorite } = point;
   const destinationItem = allDestination.find((destination) => destination.id === destinationId);
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
@@ -99,7 +99,7 @@ export default class PointItemView extends AbstractView{
   }
 
   get template() {
-    return createWaypointItemTemplate(this.#destinations, this.#offers, this.#point);
+    return createPointItemTemplate(this.#destinations, this.#offers, this.#point);
   }
 
   #editClickHandler = (evt) => {

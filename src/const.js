@@ -182,6 +182,11 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
 export {
   DESTINATIONS_CITIES,
   POINTS_TYPES,
@@ -200,5 +205,6 @@ export {
   FilterType,
   SortType,
   UserAction,
-  UpdateType
+  UpdateType,
+  Mode
 };

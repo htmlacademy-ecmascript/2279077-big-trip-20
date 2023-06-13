@@ -1,4 +1,4 @@
-import { generateNewWaypoint} from '../mock/data-structure.js';
+import { generateNewPoint} from '../mock/data-structure.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { POINTS_TYPES } from '../const.js';
 import dayjs from 'dayjs';
@@ -170,7 +170,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #isNew = false;
 
-  constructor({ destinations, offers, point = generateNewWaypoint(), onEditFormSubmit, onEditFormCancel, onEditFormDelete, isNew }) {
+  constructor({ destinations, offers, point = generateNewPoint(), onEditFormSubmit, onEditFormCancel, onEditFormDelete, isNew }) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;
@@ -331,12 +331,11 @@ export default class PointEditView extends AbstractStatefulView {
     );
   }
 
-  static parsePointToState(state) {
-    return {...state};
-  }
+  static parsePointToState = (point) => ({ ...point });
 
-  static parseStateToPoint(point) {
-    return {...point};
-  }
+  static parseStateToPoint = (state) => {
+    const point = { ...state };
+    return point;
+  };
 }
 

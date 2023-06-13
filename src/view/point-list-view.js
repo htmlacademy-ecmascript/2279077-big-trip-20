@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createWaypointItemTemplate() {
+function createPointItemTemplate() {
   return (
     '<ul class="trip-events__list"></ul>'
   );
@@ -8,6 +8,6 @@ function createWaypointItemTemplate() {
 
 export default class PointListView extends AbstractView{
   get template() {
-    return createWaypointItemTemplate();
+    return createPointItemTemplate();
   }
 }

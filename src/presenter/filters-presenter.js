@@ -4,14 +4,14 @@ import { render, replace, remove } from '../framework/render.js';
 import { dataFilter } from '../filter.js';
 
 export default class FiltersPresenter {
-  #filterContainer = null;
+  #filtersContainer = null;
   #filtersModel = null;
   #pointsModel = null;
 
   #filterComponent = null;
 
-  constructor({filterContainer, filtersModel, pointsModel}){
-    this.#filterContainer = filterContainer;
+  constructor({filtersContainer, filtersModel, pointsModel}){
+    this.#filtersContainer = filtersContainer;
     this.#filtersModel = filtersModel;
     this.#pointsModel = pointsModel;
 
@@ -32,14 +32,14 @@ export default class FiltersPresenter {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new ListFiltersView ({
+    this.#filterComponent = new ListFiltersView({
       filters,
       currentFilterType: this.#filtersModel.filter,
       onFilterTypeChange: this.#handleFilterTypeChange
     });
 
     if (prevFilterComponent === null) {
-      render(this.#filterComponent, this.#filterContainer);
+      render(this.#filterComponent, this.#filtersContainer);
       return;
     }
 
