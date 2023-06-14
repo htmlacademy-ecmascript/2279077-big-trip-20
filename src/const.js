@@ -11,7 +11,7 @@ const POINTS_COUNT = 5;
 
 const DESTINATIONS_CITIES = ['Amsterdam', 'Alicante', 'Minsk', 'Tashkent', 'Chamonix', 'Geneva', 'Seoul', 'Sihanoukville', 'New York'];
 
-const WAYPOINTS_TYPES = ['Check-in', 'Sightseeing', 'Restaurant', 'Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight'];
+const POINTS_TYPES = ['Check-in', 'Sightseeing', 'Restaurant', 'Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight'];
 
 const DESTINATIONS_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.',
@@ -170,9 +170,26 @@ const SortType = {
   OFFERS: 'offers',
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
 export {
   DESTINATIONS_CITIES,
-  WAYPOINTS_TYPES,
+  POINTS_TYPES,
   DESTINATIONS_DESCRIPTIONS,
   PICTURES_DESCRIPTIONS,
   OFFERS,
@@ -186,5 +203,8 @@ export {
   MAX_BASE_PRICE,
   POINTS_COUNT,
   FilterType,
-  SortType
+  SortType,
+  UserAction,
+  UpdateType,
+  Mode
 };

@@ -1,22 +1,26 @@
 import { remove, render, replace } from '../framework/render.js';
-
+import { UserAction, UpdateType, Mode } from '../const.js';
 import PointItemView from '../view/point-item-view.js';
 import PointEditView from '../view/point-edit-view.js';
+import { isDatesEqual } from '../sort-util.js';
 
 export default class PointPresenter {
-  #waypointListContainer = null;
   #handlePointChange = null;
+  #handleModeChange = null;
 
+  #pointListContainer = null;
   #pointComponent = null;
   #pointEditComponent = null;
 
   #destinations = null;
   #offers = null;
   #point = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({ waypointListContainer, onPointChange }) {
-    this.#waypointListContainer = waypointListContainer;
+  constructor({ pointListContainer, onPointChange, onModeChange }) {
+    this.#pointListContainer = pointListContainer;
     this.#handlePointChange = onPointChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(destinations, offers, point) {
@@ -42,20 +46,20 @@ export default class PointPresenter {
       point: this.#point,
 
       onEditFormSubmit: this.#editFormSubmit,
-      onEditFormCancel: this.#editFormCancel
+      onEditFormCancel: this.#editFormCancel,
+      onEditFormDelete: this.#editFormDelete
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      render(this.#pointComponent, this.#waypointListContainer);
+      render(this.#pointComponent, this.#pointListContainer);
       return;
     }
 
-    // Проверка на наличие в DOM
-    if (this.#waypointListContainer.contains(prevPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#waypointListContainer.contains(prevPointEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
@@ -68,39 +72,72 @@ export default class PointPresenter {
     remove(this.#pointEditComponent);
   }
 
-  #replacePointToForm() {
-    replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-  }
-
-  #replaceFormToPoint() {
-    replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
+      this.#replaceFormToPoint();
+    }
   }
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
-      evt.preventDefault();
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
   };
 
   #buttonClick = () => {
     this.#replacePointToForm();
   };
 
-  #handleFavoriteClick = () => {
-    this.#handlePointChange({...this.#point, isFavorite: !this.#point.isFavorite});
+  #editFormDelete = (point) => {
+    this.#handlePointChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
-  #editFormSubmit = (point) => {
-    this.#handlePointChange(point);
+  #editFormSubmit = (update) => {
+    const isMinorUpdate = isDatesEqual(this.#point.dateTo, update.dateTo);
+
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate
+        ? UpdateType.PATCH
+        : UpdateType.MINOR,
+      update,
+    );
     this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
   #editFormCancel = () => {
     this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
+
+  #replacePointToForm() {
+    replace(this.#pointEditComponent, this.#pointComponent);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #replaceFormToPoint() {
+    replace(this.#pointComponent, this.#pointEditComponent);
+    this.#mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
 }

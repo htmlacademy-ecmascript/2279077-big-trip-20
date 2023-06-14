@@ -1,9 +1,15 @@
 import dayjs from 'dayjs';
 
-const durationPoint = (point) => dayjs(point.dateTo).diff(dayjs(point.dateFrom));
+const getDateDiff = (dateOne, dateTwo) => dayjs(dateOne).unix() - dayjs(dateTwo).unix();
 
-const sortByTime = (points) => points.sort((a, b) => durationPoint(b) - durationPoint(a));
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
-const sortByPrice = (points) => points.slice().sort((a, b) => b.basePrice - a.basePrice);
+const getDurationPoint = (point) => dayjs(point.dateTo).diff(dayjs(point.dateFrom));
 
-export {sortByTime, sortByPrice};
+const sortByDate = ((a, b) => getDateDiff(a.dateFrom, b.dateFrom));
+
+const sortByTime = ((a, b) => getDurationPoint(b) - getDurationPoint(a));
+
+const sortByPrice = (a, b) => b.basePrice - a.basePrice;
+
+export {sortByDate, sortByTime, sortByPrice, isDatesEqual};

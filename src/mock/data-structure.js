@@ -8,7 +8,7 @@ import {
   DESTINATIONS_DESCRIPTIONS,
   PICTURES_DESCRIPTIONS,
   DESTINATIONS_CITIES,
-  WAYPOINTS_TYPES,
+  POINTS_TYPES,
   OFFERS,
   MIN_COUNT_PICTURES,
   MAX_COUNT_PICTURES,
@@ -29,8 +29,8 @@ const getRandomDestination = (index) => ({
 });
 
 
-const generateNewWaypoint = (index) => {
-  const type = getRandomArrayElement(WAYPOINTS_TYPES);
+const generateNewPoint = (index) => {
+  const type = getRandomArrayElement(POINTS_TYPES);
   const date = getRandomDate();
 
   return {
@@ -45,7 +45,7 @@ const generateNewWaypoint = (index) => {
   };
 };
 
-const createMockPoints = (count) => Array.from({ length: count }, (_, index) => generateNewWaypoint(index + 1));
+const createMockPoints = (count) => Array.from({ length: count }, (_, index) => generateNewPoint(index + 1));
 const getRandomDestinations = (count) => Array.from({ length: count }, (_, index) => getRandomDestination(index + 1));
 
-export { getRandomDestinations, createMockPoints, generateNewWaypoint };
+export { getRandomDestinations, createMockPoints, generateNewPoint };
