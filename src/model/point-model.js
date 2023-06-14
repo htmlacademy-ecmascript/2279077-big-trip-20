@@ -35,8 +35,12 @@ export default class PointsModel extends Observable {
     this._notify(updateType, update);
   }
 
+
   addPoint(updateType, update) {
-    this.#points.unshift(update);
+    this.#points = [
+      update,
+      ...this.#points,
+    ];
 
     this._notify(updateType, update);
   }
@@ -48,7 +52,7 @@ export default class PointsModel extends Observable {
       throw new Error('Can\'t delete unexisting point');
     }
 
-    this.#points.splice(index, 1);
+    this.#points = this.#points.filter((point) => point.id !== update.id);
 
     this._notify(updateType);
   }

@@ -19,7 +19,6 @@ export default class BoardPresenter {
 
   #destinations = [];
   #offers = [];
-  #listPoints = [];
   #newPointPresenter = null;
   #pointPresenter = new Map();
 
@@ -63,7 +62,6 @@ export default class BoardPresenter {
   init() {
     this.#destinations = this.#pointsModel.destinations;
     this.#offers = this.#pointsModel.offers;
-    this.#listPoints = [...this.#pointsModel.points];
 
     this.#renderBoard();
   }
@@ -155,11 +153,11 @@ export default class BoardPresenter {
 
     remove(this.#sortComponent);
 
-    if(this.#noPointsComponent){
+    if (this.#noPointsComponent){
       remove(this.#noPointsComponent);
     }
 
-    if(resetSortType){
+    if (resetSortType){
       this.#currentSortType = SortType.DAY;
     }
   }
@@ -169,14 +167,13 @@ export default class BoardPresenter {
     render(this.#pointListComponent, this.#pointListContainer);
 
     const points = this.points;
-    const pointsCount = points.length;
 
-    if (pointsCount === 0){
+    if (points.length === 0){
       this.#renderNoPoints();
       return;
     }
 
     this.#renderSort();
-    this.#listPoints.forEach((point) => this.#renderPoint(this.#destinations, this.#offers, point));
+    points.forEach((point) => this.#renderPoint(this.#destinations, this.#offers, point));
   }
 }
