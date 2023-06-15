@@ -7,7 +7,7 @@ import FiltersPresenter from './presenter/filters-presenter.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic jjjf456633kflv;vkdjdll';
+const AUTHORIZATION = 'Basic jjjf456633kflv;vkdj';
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
 const siteHeaderElement = document.querySelector('.page-header');
