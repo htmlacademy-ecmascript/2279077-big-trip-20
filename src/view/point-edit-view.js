@@ -87,7 +87,7 @@ const createTypesMarkup = (type) => POINTS_TYPES.map((typeEvent) => {
   return (/*html*/`
       <div class="event__type-item">
         <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}" ${checked}>
-        <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
+        <label class="event__type-label event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
       </div>`);
 }).join('');
 
@@ -166,7 +166,8 @@ export default class PointEditView extends AbstractStatefulView {
   #editFormSubmit = null;
   #editFormCancel = null;
   #editFormDelete = null;
-  #datepicker = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   #isNew = false;
 
@@ -191,9 +192,11 @@ export default class PointEditView extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#datepickerFrom || this.#datepickerTo) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerTo.destroy();
+      this.#datepickerFrom = null;
+      this.#datepickerTo = null;
     }
   }
 
@@ -271,7 +274,7 @@ export default class PointEditView extends AbstractStatefulView {
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.value,
+      basePrice: Number(evt.target.value),
     });
   };
 
@@ -303,7 +306,7 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #setDatepickerFrom() {
-    this.#datepicker = flatpickr(
+    this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time-1'),
       {
         enableTime: true,
@@ -318,7 +321,7 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   #setDatepickerTo() {
-    this.#datepicker = flatpickr(
+    this.#datepickerTo = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
         enableTime: true,
@@ -333,9 +336,6 @@ export default class PointEditView extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({ ...point });
 
-  static parseStateToPoint = (state) => {
-    const point = { ...state };
-    return point;
-  };
+  static parseStateToPoint = (state) => ({ ...state });
 }
 

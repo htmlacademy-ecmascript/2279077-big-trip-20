@@ -10,12 +10,12 @@ import PointsApiService from './points-api-service.js';
 const AUTHORIZATION = 'Basic jjjf456633kflv;vkdj';
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
-const siteHeaderElement = document.querySelector('.page-header');
-const filtersContainer = siteHeaderElement.querySelector('.trip-controls__filters');
-const tripInfoContainer = siteHeaderElement.querySelector('.trip-main');
+const siteHeader = document.querySelector('.page-header');
+const filtersContainer = siteHeader.querySelector('.trip-controls__filters');
+const tripInfoContainer = siteHeader.querySelector('.trip-main');
 
-const siteMainElement = document.querySelector('.page-main');
-const tripEventsContainer = siteMainElement.querySelector('.trip-events');
+const siteMain = document.querySelector('.page-main');
+const tripEventsContainer = siteMain.querySelector('.trip-events');
 
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)

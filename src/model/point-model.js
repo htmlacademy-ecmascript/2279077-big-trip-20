@@ -6,8 +6,8 @@ import { UpdateType } from '../const';
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
-  #destinations = null;
-  #offers = null;
+  #destinations = [];
+  #offers = [];
   #points = [];
 
   constructor({pointsApiService}) {
@@ -31,7 +31,7 @@ export default class PointsModel extends Observable {
     try {
       const points = await this.#pointsApiService.points;
       this.#destinations = await this.#pointsApiService.destinations;
-      this.offers = await this.#pointsApiService.offers;
+      this.#offers = await this.#pointsApiService.offers;
       this.#points = points.map(this.#adaptToClient);
     } catch(err) {
       this.#destinations = [];
@@ -92,10 +92,11 @@ export default class PointsModel extends Observable {
   }
 
   #adaptToClient(point) {
-    const adaptedPoint = {...point,
+    const adaptedPoint = {
+      ...point,
       basePrice: point['base_price'],
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      dateFrom: point['date_from'],
+      dateTo: point['date_to'],
       isFavorite: point['is_favorite'],
     };
 

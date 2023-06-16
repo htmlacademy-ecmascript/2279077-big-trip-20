@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
-import { calculateDuration, getOffersByType } from '../utils.js';
+import { getOffersByType, formatDuration, getDuration } from '../utils.js';
 import he from 'he';
 
 
@@ -16,7 +16,7 @@ function createPointItemTemplate(allDestination, allOffers, point) {
   const endTime = dayjs(dateTo).format('HH:mm');
   const endTimeDateTime = dayjs(dateTo).format('YYYY-MM-DDTHH:mm');
 
-  const eventDuration = calculateDuration(dateFrom, dateTo);
+  const eventDuration = formatDuration(getDuration(dateFrom, dateTo));
 
   const typeOffers = getOffersByType(allOffers, type.toLowerCase());
 

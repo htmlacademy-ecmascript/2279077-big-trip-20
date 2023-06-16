@@ -63,22 +63,29 @@ const getRandomDate = () => {
   };
 };
 
-const calculateDuration = (start, end) => {
-  const diff = dayjs.duration(dayjs(start).diff(dayjs(end)));
 
-  let result = '';
+const DateFormat = {
+  EVENT_DATE: 'MMM D',
+  SHORT_EVENT_DATE: 'D',
+  EVENT_EDIT_DATE: 'DD/MM/YY HH:mm',
+  TIME: 'HH:mm',
+  D_H_M_DURATION: 'DD[D] HH[H] mm[M]',
+  H_M_DURATION: 'HH[H] mm[M]',
+  M_DURATION: 'mm[M]'
+};
 
-  if (diff.days() >= 0) {
-    result += `${diff.days()} D`;
-  }
-  if (diff.hours() >= 0) {
-    result += `${diff.hours()} H`;
-  }
-  if (diff.minutes() >= 0) {
-    result += `${diff.minutes()} M`;
+const getDuration = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start)));
+
+const formatDuration = (durationValue) => {
+  if (durationValue.get('day')) {
+    return durationValue.format(DateFormat.D_H_M_DURATION);
   }
 
-  return result;
+  if (!durationValue.get('day') && durationValue.get('hour')) {
+    return durationValue.format(DateFormat.H_M_DURATION);
+  }
+
+  return durationValue.format(DateFormat.M_DURATION);
 };
 
 const isDateFuture = (dateFrom) => dayjs().isBefore(dateFrom);
@@ -87,18 +94,16 @@ const isDatePast = (dateTo) => dayjs().isAfter(dateTo);
 
 const isDatePresent = (dateFrom, dateTo) => dayjs().isAfter(dateFrom) && dayjs().isBefore(dateTo);
 
-const isSameMonth = (dateFrom, dateTo) => dayjs(dateTo).isSame(dateFrom, 'M');
-
 
 export {
   getRandomArrayElement,
   getRandomNumber,
   getRandomDate,
   getRandomOffersByType,
-  calculateDuration,
   getOffersByType,
   isDateFuture,
   isDatePast,
   isDatePresent,
-  isSameMonth
+  getDuration,
+  formatDuration
 };

@@ -19,8 +19,6 @@ export default class BoardPresenter {
   #loadingComponent = new LoadingView();
   #sortComponent = null;
 
-  #destinations = [];
-  #offers = [];
   #newPointPresenter = null;
   #pointPresenter = new Map();
 
@@ -62,11 +60,15 @@ export default class BoardPresenter {
     }
   }
 
+  get destinations() {
+    return this.#pointsModel.destinations;
+  }
+
+  get offers() {
+    return this.#pointsModel.offers;
+  }
 
   init() {
-    this.#destinations = this.#pointsModel.destinations;
-    this.#offers = this.#pointsModel.offers;
-
     this.#renderBoard();
   }
 
@@ -119,7 +121,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.id).init(this.#destinations, this.#offers, data);
+        this.#pointPresenter.get(data.id).init(this.destinations, this.offers, data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
@@ -192,6 +194,6 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
-    points.forEach((point) => this.#renderPoint(this.#destinations, this.#offers, point));
+    points.forEach((point) => this.#renderPoint(this.destinations, this.offers, point));
   }
 }
