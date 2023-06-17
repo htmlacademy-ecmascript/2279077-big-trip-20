@@ -41,6 +41,7 @@ const createOffersMarkup = (typeOffers, offers) => typeOffers.map((offer) => {
         class="event__offer-checkbox visually-hidden"
         id="event-offer-${offer.id}"
         type="checkbox"
+        value="${offer.id}"
         name="event-offer-${offer.id}"
         ${checked}
       >
@@ -75,7 +76,7 @@ const createOffersTemplate = (typeOffers, offers) => {
 
 const createDestinationListTemplate = (allDestination) => (/*html*/`
   <datalist id="destination-list-1">
-    ${allDestination.map((destination) => `<option value=" ${he.encode(`${destination.name}`)}"></option>`).join('')}
+    ${allDestination.map((destination) => `<option value="${he.encode(`${destination.name}`)}"></option>`).join('')}
   </datalist>`);
 
 
@@ -86,8 +87,17 @@ const createTypesMarkup = (type) => POINTS_TYPES.map((typeEvent) => {
 
   return (/*html*/`
       <div class="event__type-item">
-        <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}" ${checked}>
-        <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
+        <input
+          id="event-type-${typeEvent.toLowerCase()}-1"
+          class="event__type-input  visually-hidden"
+          type="radio"
+          name="event-type"
+          value="${typeEvent.toLowerCase()}" ${checked}
+        >
+        <label
+          class="event__type-label event__type-label--${typeEvent.toLowerCase()}"
+          for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}
+        </label>
       </div>`);
 }).join('');
 
@@ -166,7 +176,8 @@ export default class PointEditView extends AbstractStatefulView {
   #editFormSubmit = null;
   #editFormCancel = null;
   #editFormDelete = null;
-  #datepicker = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   #isNew = false;
 
@@ -191,9 +202,11 @@ export default class PointEditView extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#datepickerFrom || this.#datepickerTo) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerTo.destroy();
+      this.#datepickerFrom = null;
+      this.#datepickerTo = null;
     }
   }
 
@@ -240,6 +253,7 @@ export default class PointEditView extends AbstractStatefulView {
   #typeChangeHandler = (evt) => {
     this.updateElement({
       type: evt.target.value,
+      offers: [],
     });
   };
 
@@ -260,7 +274,7 @@ export default class PointEditView extends AbstractStatefulView {
     const selectedOffer = evt.target.value;
 
     const newOffers = evt.target.checked
-      ? this._state.offers.push(selectedOffer)
+      ? this._state.offers.concat(selectedOffer)
       : this._state.offers.filter((offer) => offer !== selectedOffer);
 
     this.updateElement({
@@ -271,7 +285,7 @@ export default class PointEditView extends AbstractStatefulView {
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.value,
+      basePrice: Number(evt.target.value),
     });
   };
 
@@ -303,7 +317,7 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #setDatepickerFrom() {
-    this.#datepicker = flatpickr(
+    this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time-1'),
       {
         enableTime: true,
@@ -318,7 +332,7 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   #setDatepickerTo() {
-    this.#datepicker = flatpickr(
+    this.#datepickerTo = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
         enableTime: true,
@@ -333,9 +347,6 @@ export default class PointEditView extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({ ...point });
 
-  static parseStateToPoint = (state) => {
-    const point = { ...state };
-    return point;
-  };
+  static parseStateToPoint = (state) => ({ ...state });
 }
 
