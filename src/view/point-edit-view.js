@@ -41,6 +41,7 @@ const createOffersMarkup = (typeOffers, offers) => typeOffers.map((offer) => {
         class="event__offer-checkbox visually-hidden"
         id="event-offer-${offer.id}"
         type="checkbox"
+        value="${offer.id}"
         name="event-offer-${offer.id}"
         ${checked}
       >
@@ -75,7 +76,7 @@ const createOffersTemplate = (typeOffers, offers) => {
 
 const createDestinationListTemplate = (allDestination) => (/*html*/`
   <datalist id="destination-list-1">
-    ${allDestination.map((destination) => `<option value=" ${he.encode(`${destination.name}`)}"></option>`).join('')}
+    ${allDestination.map((destination) => `<option value="${he.encode(`${destination.name}`)}"></option>`).join('')}
   </datalist>`);
 
 
@@ -86,8 +87,17 @@ const createTypesMarkup = (type) => POINTS_TYPES.map((typeEvent) => {
 
   return (/*html*/`
       <div class="event__type-item">
-        <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}" ${checked}>
-        <label class="event__type-label event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
+        <input
+          id="event-type-${typeEvent.toLowerCase()}-1"
+          class="event__type-input  visually-hidden"
+          type="radio"
+          name="event-type"
+          value="${typeEvent.toLowerCase()}" ${checked}
+        >
+        <label
+          class="event__type-label event__type-label--${typeEvent.toLowerCase()}"
+          for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}
+        </label>
       </div>`);
 }).join('');
 
@@ -243,6 +253,7 @@ export default class PointEditView extends AbstractStatefulView {
   #typeChangeHandler = (evt) => {
     this.updateElement({
       type: evt.target.value,
+      offers: [],
     });
   };
 
@@ -263,7 +274,7 @@ export default class PointEditView extends AbstractStatefulView {
     const selectedOffer = evt.target.value;
 
     const newOffers = evt.target.checked
-      ? this._state.offers.push(selectedOffer)
+      ? this._state.offers.concat(selectedOffer)
       : this._state.offers.filter((offer) => offer !== selectedOffer);
 
     this.updateElement({

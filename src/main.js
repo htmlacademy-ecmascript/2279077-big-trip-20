@@ -1,5 +1,3 @@
-import { render, RenderPosition } from './framework/render.js';
-import PointInfoView from './view/trip-info-view.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/point-model.js';
 import FiltersModel from './model/filter-model.js';
@@ -12,7 +10,6 @@ const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
 const siteHeader = document.querySelector('.page-header');
 const filtersContainer = siteHeader.querySelector('.trip-controls__filters');
-const tripInfoContainer = siteHeader.querySelector('.trip-main');
 
 const siteMain = document.querySelector('.page-main');
 const tripEventsContainer = siteMain.querySelector('.trip-events');
@@ -48,8 +45,6 @@ function handleNewPointButtonClick(){
   boardPresenter.createPoint();
   newPointButtonComponent.element.disabled = true;
 }
-
-render(new PointInfoView(), tripInfoContainer, RenderPosition.AFTERBEGIN);
 
 filtersPresenter.init();
 boardPresenter.init();
