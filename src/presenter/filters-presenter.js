@@ -1,7 +1,7 @@
 import { FilterType, UpdateType } from '../const.js';
 import ListFiltersView from '../view/list-filters-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { dataFilter } from '../filter.js';
+import { dataFilter } from '../utils/filter.js';
 
 export default class FiltersPresenter {
   #filtersContainer = null;

@@ -1,8 +1,7 @@
-import { generateNewPoint} from '../mock/data-structure.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { POINTS_TYPES } from '../const.js';
+import { BLANK_POINT, POINTS_TYPES } from '../const.js';
 import dayjs from 'dayjs';
-import { getOffersByType } from '../utils.js';
+import { getOffersByType } from '../utils/common.js';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -22,12 +21,18 @@ const createEventPhotosTemplate = (picturesList) => {
     </div>`);
 };
 
-const createDestinationTemplate = (destinationItem) => (/*html*/`
+const createDestinationTemplate = (destinationItem) => {
+  if (!destinationItem) {
+    return '';
+  }
+
+  return (/*html*/`
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${destinationItem.description}</p>
       ${createEventPhotosTemplate(destinationItem.pictures)}
     </section>`);
+};
 
 
 // Разметка предложения
@@ -77,7 +82,7 @@ const createOffersTemplate = (typeOffers, offers) => {
 
 const createDestinationListTemplate = (allDestination) => (/*html*/`
   <datalist id="destination-list-1">
-    ${allDestination.map((destination) => `<option value="${he.encode(`${destination.name}`)}"></option>`).join('')}
+    ${allDestination.map((destination) => `<option value="${he.encode(`${destination?.name || ''}`)}"></option>`).join('')}
   </datalist>`);
 
 
@@ -136,7 +141,7 @@ const createPointEditTemplate = (allDestinations, allOffers, point, isNew) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationItem.name}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationItem?.name || ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-1">
               ${createDestinationListTemplate(allDestinations)}
             </datalist>
@@ -159,13 +164,13 @@ const createPointEditTemplate = (allDestinations, allOffers, point, isNew) => {
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
           <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNew ? 'Cancel' : deleteButton}</button>
-          ${isNew ? '' : `<button class="event__rollup-btn" type="button">
+          ${isNew ? '' : '<button class="event__rollup-btn" type="button">'}
         </header>
-        <section class="event__details">`}
+        <section class="event__details">
           ${createOffersTemplate(typeOffers, offers)}
 
           ${createDestinationTemplate(destinationItem)}
-      </section>
+        </section>
     </form>
   </li>`
   );
@@ -174,7 +179,6 @@ const createPointEditTemplate = (allDestinations, allOffers, point, isNew) => {
 export default class PointEditView extends AbstractStatefulView {
   #destinations = {};
   #offers = {};
-  #point = {};
 
   #editFormSubmit = null;
   #editFormCancel = null;
@@ -184,7 +188,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #isNew = false;
 
-  constructor({ destinations, offers, point = generateNewPoint(), onEditFormSubmit, onEditFormCancel, onEditFormDelete, isNew }) {
+  constructor({ destinations, offers, point = BLANK_POINT, onEditFormSubmit, onEditFormCancel, onEditFormDelete, isNew = false }) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;
@@ -199,7 +203,7 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createPointEditTemplate(this.#destinations, this.#offers, this._state);
+    return createPointEditTemplate(this.#destinations, this.#offers, this._state, this.#isNew);
   }
 
   removeElement() {

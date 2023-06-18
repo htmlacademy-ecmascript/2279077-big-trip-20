@@ -1,15 +1,15 @@
+import { AUTHORIZATION, END_POINT } from './const.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/point-model.js';
 import FiltersModel from './model/filter-model.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import NewPointButtonView from './view/new-point-button-view.js';
-import PointsApiService from './points-api-service.js';
-
-const AUTHORIZATION = 'Basic jjjf456633kflv;vkdj';
-const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
+import PointsApiService from './server/points-api-service.js';
+import { render } from './framework/render.js';
 
 const siteHeader = document.querySelector('.page-header');
 const filtersContainer = siteHeader.querySelector('.trip-controls__filters');
+const tripMain = siteHeader.querySelector('.trip-main');
 
 const siteMain = document.querySelector('.page-main');
 const tripEventsContainer = siteMain.querySelector('.trip-events');
@@ -48,4 +48,7 @@ function handleNewPointButtonClick(){
 
 filtersPresenter.init();
 boardPresenter.init();
-pointsModel.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, tripMain);
+  });

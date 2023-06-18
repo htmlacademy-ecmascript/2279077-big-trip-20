@@ -2,7 +2,7 @@ import { remove, render, replace } from '../framework/render.js';
 import { UserAction, UpdateType, Mode } from '../const.js';
 import PointItemView from '../view/point-item-view.js';
 import PointEditView from '../view/point-edit-view.js';
-import { isDatesEqual } from '../sort-util.js';
+import { isDatesEqual } from '../utils/sort-util.js';
 
 export default class PointPresenter {
   #handlePointChange = null;
