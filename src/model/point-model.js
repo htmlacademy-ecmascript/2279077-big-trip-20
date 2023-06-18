@@ -1,6 +1,4 @@
 import Observable from '../framework/observable';
-// import { createMockPoints, getRandomDestinations } from '../mock/data-structure';
-// import { OFFERS, POINTS_COUNT } from '../const';
 import { UpdateType } from '../const';
 
 

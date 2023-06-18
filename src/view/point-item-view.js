@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
-import { getOffersByType, formatDuration, getDuration } from '../utils.js';
+import { getOffersByType, formatDuration, getDuration } from '../utils/common.js';
 import he from 'he';
 
 
