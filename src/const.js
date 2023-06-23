@@ -11,7 +11,7 @@ const BLANK_POINT = {
   dateTo: dayjs().add(2, 'D').toISOString(),
   isFavorite: false,
   offers: [],
-  type: POINTS_TYPES[0]
+  type: POINTS_TYPES[0].toLowerCase()
 };
 
 const FilterType = {

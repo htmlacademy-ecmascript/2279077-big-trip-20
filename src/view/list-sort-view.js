@@ -20,7 +20,8 @@ function createListSortTemplate(currentSortType) {
       <input
         id="sort-event"
         class="trip-sort__input visually-hidden"
-        type="radio" name="trip-sort"
+        type="radio"
+        name="trip-sort"
         value="sort-event"
         disabled
         data-sort-type=${SortType.EVENT}
@@ -69,10 +70,10 @@ function createListSortTemplate(currentSortType) {
   );
 }
 
-function createSortFormTemplate() {
+function createSortFormTemplate(currentSortType) {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${createListSortTemplate()}
+      ${createListSortTemplate(currentSortType)}
     </form>`
   );
 }

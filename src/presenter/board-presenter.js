@@ -19,11 +19,11 @@ export default class BoardPresenter {
   #pointListContainer = null;
   #pointsModel = null;
   #filtersModel = null;
-  #noPointsComponent = null;
 
   #pointListComponent = new PointListView();
   #loadingComponent = new LoadingView();
   #sortComponent = null;
+  #noPointsComponent = null;
 
   #newPointPresenter = null;
   #pointPresenter = new Map();
@@ -68,7 +68,7 @@ export default class BoardPresenter {
       case SortType.PRICE:
         return filteredPoints.slice().sort(sortByPrice);
       default:
-        throw new Error(`Unknow sort type ${this.#currentSortType}`);
+        throw new Error(`Unknown sort type ${this.#currentSortType}`);
     }
   }
 
@@ -85,6 +85,10 @@ export default class BoardPresenter {
   }
 
   createPoint(){
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
+
     this.#currentSortType = SortType.DAY;
     this.#filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init({destinations: this.destinations, offers: this.offers});
@@ -190,7 +194,7 @@ export default class BoardPresenter {
       filterType: this.#filterType
     });
 
-    render(this.#noPointsComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#noPointsComponent, this.#pointListContainer);
   }
 
   #clearBoard({ resetSortType = false } = {}) {
