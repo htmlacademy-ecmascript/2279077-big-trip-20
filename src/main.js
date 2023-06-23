@@ -4,7 +4,7 @@ import PointsModel from './model/point-model.js';
 import FiltersModel from './model/filter-model.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import NewPointButtonView from './view/new-point-button-view.js';
-import PointsApiService from './server/points-api-service.js';
+import PointsApiService from './api/points-api-service.js';
 import { render } from './framework/render.js';
 
 const siteHeader = document.querySelector('.page-header');

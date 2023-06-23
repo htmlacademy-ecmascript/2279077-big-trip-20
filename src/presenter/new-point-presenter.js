@@ -26,11 +26,11 @@ export default class NewPointPresenter {
       destinations,
       offers,
       onEditFormSubmit: this.#editFormSubmit,
-      onEditFormDelete: this.#editFormDelete,
+      onEditFormCancel: this.#editFormCancel,
       isNew: true,
     });
 
-    render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.BEFOREBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
@@ -75,7 +75,7 @@ export default class NewPointPresenter {
     );
   };
 
-  #editFormDelete = () => {
+  #editFormCancel = () => {
     this.destroy();
   };
 
